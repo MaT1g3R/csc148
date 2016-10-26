@@ -163,6 +163,16 @@ class CountDescendantsTest(unittest.TestCase):
         mina = Person('mina', [goku])
         self.assertEqual(mina.count_descendants(), 3)
 
+    def test_wtfisthis(self):
+        hotel = Person('hotel', [])
+        golf = Person('golf', [])
+        foxtrot = Person('foxtrot', [])
+        echo = Person('echo', [foxtrot])
+        delta = Person('delta', [golf])
+        charlie = Person('charlie', [hotel])
+        bravo = Person('bravo', [echo])
+        alpha = Person('alpha', [bravo, charlie, delta])
+        self.assertEqual(alpha.count_descendants(), 7)
 
 if __name__ == '__main__':
     unittest.main()

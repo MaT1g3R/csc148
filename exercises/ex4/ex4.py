@@ -38,19 +38,19 @@ def duplicate(nested_list):
     [1, 1, 2, 2]
     >>> duplicate([1, [2, 3]])  # NOT [1, 1, [2, 2, 3, 3], [2, 2, 3, 3]]
     [1, 1, [2, 2, 3, 3]]
+    >>> duplicate([1,2,3,[1,2,3,[1,2,3]]])
+    [1, 1, 2, 2, 3, 3, [1, 1, 2, 2, 3, 3, [1, 1, 2, 2, 3, 3]]]
     """
     returned = []
-    if not nested_list:
-        return []
+
+    if isinstance(nested_list, int):
+        return [nested_list, nested_list]
     else:
-        if isinstance(nested_list, int):
-            return [nested_list, nested_list]
-        else:
-            for i in nested_list:
-                if isinstance(i, list):
-                    returned += [duplicate(i)]
-                else:
-                    returned += [i, i]
+        for i in nested_list:
+            if isinstance(i, list):
+                returned += [duplicate(i)]
+            else:
+                returned += [i, i]
     return returned
 
 
@@ -118,10 +118,10 @@ class Person:
         """
         count = 0
         for p in self.children:
-            if p.children is None:
+            if p.children == []:
                 count += 1
             else:
-                count += p.count_descendants()
+                count += p.count_descendants() + 1
         return count
 
 
