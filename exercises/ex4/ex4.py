@@ -18,7 +18,6 @@ It is divided into two parts:
 ##############################################################################
 
 
-# TODO: Implement this!
 def duplicate(nested_list):
     """Return a new nested list with all numbers in <nested_list> duplicated.
 
@@ -40,10 +39,21 @@ def duplicate(nested_list):
     >>> duplicate([1, [2, 3]])  # NOT [1, 1, [2, 2, 3, 3], [2, 2, 3, 3]]
     [1, 1, [2, 2, 3, 3]]
     """
-    pass
+    returned = []
+    if not nested_list:
+        return []
+    else:
+        if isinstance(nested_list, int):
+            return [nested_list, nested_list]
+        else:
+            for i in nested_list:
+                if isinstance(i, list):
+                    returned += [duplicate(i)]
+                else:
+                    returned += [i, i]
+    return returned
 
 
-# TODO: Implement this!
 def add_one(nested_list):
     """Add one to every number stored in <nested_list>.
 
@@ -67,7 +77,14 @@ def add_one(nested_list):
     >>> lst2
     [2, [3, 4], [[[6]]]]
     """
-    pass
+    if isinstance(nested_list, int) or not nested_list:
+        pass
+    else:
+        for i in range(len(nested_list)):
+            if isinstance(nested_list[i], int):
+                nested_list[i] += 1
+            else:
+                add_one(nested_list[i])
 
 
 ##############################################################################
@@ -93,14 +110,19 @@ class Person:
         self.name = new_name
         self.children = new_children
 
-    # TODO: Implement this!
     def count_descendants(self):
         """Return the number of descendants of this person.
 
         @type self: Person
         @rtype: int
         """
-        pass
+        count = 0
+        for p in self.children:
+            if p.children is None:
+                count += 1
+            else:
+                count += p.count_descendants()
+        return count
 
 
 if __name__ == '__main__':
@@ -109,4 +131,3 @@ if __name__ == '__main__':
 
     import python_ta
     python_ta.check_all()
-# test
