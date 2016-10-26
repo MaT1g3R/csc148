@@ -41,17 +41,17 @@ def duplicate(nested_list):
     >>> duplicate([1,2,3,[1,2,3,[1,2,3]],[[[1]]]])
     [1, 1, 2, 2, 3, 3, [1, 1, 2, 2, 3, 3, [1, 1, 2, 2, 3, 3]], [[[1, 1]]]]
     """
-    returned = []
 
     if isinstance(nested_list, int):
-        returned += [nested_list, nested_list]
+        return [nested_list, nested_list]
     else:
+        returned = []
         for i in nested_list:
             if isinstance(i, list):
                 returned += [duplicate(i)]
             else:
                 returned += [i, i]
-    return returned
+        return returned
 
 
 def add_one(nested_list):
