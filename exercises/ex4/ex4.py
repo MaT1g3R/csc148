@@ -131,5 +131,3 @@ if __name__ == '__main__':
 
     import python_ta
     python_ta.check_all()
-
-#     Testo
