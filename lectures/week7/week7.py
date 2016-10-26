@@ -28,7 +28,7 @@ def sum_list_2(lst):
 
 def sum_of_nested_list(lst):
     """
-    @type lst: list
+    @type lst: list|int
     @rtype: int
     >>> sum_of_nested_list([1,2,3])
     6
@@ -41,11 +41,8 @@ def sum_of_nested_list(lst):
     """
     s = 0
     if isinstance(lst, int):
-        return lst
-
-    for i in lst:
-        if isinstance(i, int):
-            s += i
-        else:
+        s += lst
+    else:
+        for i in lst:
             s += sum_of_nested_list(i)
     return s
