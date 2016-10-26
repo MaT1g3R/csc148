@@ -48,9 +48,9 @@ def duplicate(nested_list):
         returned = []
         for i in nested_list:
             if isinstance(i, list):
-                returned.append(duplicate(i))
+                returned += [duplicate(i)]
             else:
-                returned += duplicate(i)
+                returned += [i, i]
         return returned
 
 
