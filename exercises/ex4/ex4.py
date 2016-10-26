@@ -44,7 +44,7 @@ def duplicate(nested_list):
     returned = []
 
     if isinstance(nested_list, int):
-        return [nested_list, nested_list]
+        returned += [nested_list, nested_list]
     else:
         for i in nested_list:
             if isinstance(i, list):
