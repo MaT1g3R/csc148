@@ -1,0 +1,13 @@
+Consider this function call flatten([[1, 5, 7], [[4]], 0, [-4, [6], [7, [8], 8]]]).
+
+On paper, answer the following questions:
+
+What is the correct output of the function call?
+
+What are the relevant recursive calls of flatten? Remember to only "go down one level", i.e., break down the argument into its four component nested lists. For each recursive call, what is its correct output?
+
+Which of the recursive calls, if any, immediately use the base case rather than make further recursive calls? Note that you can answer this by looking at the arguments to the recursive calls, without seeing the implementation of the function.
+
+1. [1,5,7,4,0,-4,6,7,8,8]
+2. [1,5,7], [[4]], 0 ,[-4,[6],[7,[8],8]]
+3. '0' is the base case.
