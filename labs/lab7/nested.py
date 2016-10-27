@@ -25,7 +25,14 @@ def nested_max(obj):
     >>> nested_max([1, 2, [1, 2, [3], 4, 5], 4])
     5
     """
-    pass
+    if isinstance(obj, int):
+        return obj
+    else:
+        max_ = 0
+        for item in obj:
+            if nested_max(item) > max_:
+                max_ = nested_max(item)
+        return max_
 
 
 def length(obj):
@@ -46,7 +53,15 @@ def length(obj):
     >>> length([1, 2, [1, 2, [3], 4, 5], 4])
     5
     """
-    pass
+    if isinstance(obj, int):
+        return 0
+    else:
+        len_ = len(obj)
+        for item in obj:
+            len2 = length(item)
+            if len2 > len_:
+                len_ = len2
+        return len_
 
 
 def equal(obj1, obj2):
@@ -64,5 +79,33 @@ def equal(obj1, obj2):
     True
     >>> equal([1, 2, [1, 2], 4], [4, 2, [2, 1], 3])
     False
+    >>> equal([1,2,3], [1,[2],3])
+    True
     """
-    pass
+    return flatten(obj1) == flatten(obj2)
+
+
+def flatten(lst):
+    """Return a list containing all the numbers in <lst>.
+
+    <lst> is a nested list, but the returned list should not be nested.
+    The items should appear in the output in the left-to-right order they
+    appear in <lst>.
+
+    @type lst: int | list
+    @rtype: list[int]
+
+    >>> flatten(5)
+    [5]
+    >>> flatten([1, [2], 3])
+    [1, 2, 3]
+    >>> flatten([[1, 5, 7], [[4]], 0, [-4, [6], [7, [8], 8]]])
+    [1, 5, 7, 4, 0, -4, 6, 7, 8, 8]
+    """
+    if isinstance(lst, int):
+        return [lst]
+    else:
+        result = []
+        for lst_i in lst:
+            result += flatten(lst_i)
+        return result
