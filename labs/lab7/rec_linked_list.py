@@ -87,7 +87,15 @@ class LinkedListRec:
         >>> len(lst)
         3
         """
-        pass
+        if self._first is None:
+            return 0
+        if self._rest is None:
+            return 1
+        else:
+            r = 0
+            curr = None
+            for i in self._rest:
+                curr = self._rest[0]
 
     def __getitem__(self, index):
         """Return the item at position <index> in this list.
