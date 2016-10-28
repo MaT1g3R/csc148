@@ -46,3 +46,26 @@ def sum_of_nested_list(lst):
         for i in lst:
             s += sum_of_nested_list(i)
     return s
+
+def size(obj):
+    """ return the number of intergers in the nested list
+    @type obj: list[int] | int
+    @rtype: int
+
+    >>> size([1,2,3])
+    3
+    >>> size(222)
+    1
+    >>> size([1,2,3,[1,1,3,[1]], [1,2]])
+    9
+    >>> size([])
+    0
+    """
+
+    if isinstance(obj, int):
+        return 1
+    else:
+        x = 0
+        for i in obj:
+            x += size(i)
+        return x

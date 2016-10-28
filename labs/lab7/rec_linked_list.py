@@ -87,15 +87,12 @@ class LinkedListRec:
         >>> len(lst)
         3
         """
-        if self._first is None:
+        if self.is_empty():
             return 0
-        if self._rest is None:
+        elif self._rest.is_empty():
             return 1
         else:
-            r = 0
-            curr = None
-            for i in self._rest:
-                curr = self._rest[0]
+            return len([self._first]) + len(self._rest)
 
     def __getitem__(self, index):
         """Return the item at position <index> in this list.
@@ -118,7 +115,15 @@ class LinkedListRec:
         ...
         IndexError
         """
-        pass
+        if self.is_empty():
+            raise IndexError
+        elif self._rest.is_empty():
+            return self._first
+        else:
+            x = None
+            for i in range(index):
+                x = self._rest
+            return x._first
 
     def __setitem__(self, index, item):
         """Store item at position <index> in this list.
