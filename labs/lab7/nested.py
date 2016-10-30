@@ -85,7 +85,7 @@ def equal(obj1, obj2):
     if type(obj1) == type(obj2) == int:
         return obj1 == obj2
     elif isinstance(obj1, int) or isinstance(obj2, int) or \
-                    len(obj1) != len(obj2):
+            len(obj1) != len(obj2):
         return False
     else:
         for i in range(len(obj1)):

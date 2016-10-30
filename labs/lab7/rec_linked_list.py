@@ -86,16 +86,14 @@ class LinkedListRec:
         >>> lst = LinkedListRec([1, 2, 3])
         >>> len(lst)
         3
+        >>> lst = LinkedListRec([1,1,1,1,1,1,1,1,1,1])
+        >>> len(lst)
+        10
         """
-        if self._first is None:
+        if self.is_empty():
             return 0
-        if self._rest is None:
-            return 1
         else:
-            r = 0
-            curr = None
-            for i in self._rest:
-                curr = self._rest[0]
+            return len(self._rest) + 1
 
     def __getitem__(self, index):
         """Return the item at position <index> in this list.
@@ -118,7 +116,12 @@ class LinkedListRec:
         ...
         IndexError
         """
-        pass
+        if self.is_empty():
+            raise IndexError
+        elif index == 0:
+            return self._first
+        else:
+            return self._rest[index - 1]
 
     def __setitem__(self, index, item):
         """Store item at position <index> in this list.
@@ -141,7 +144,12 @@ class LinkedListRec:
         >>> str(lst)
         '100 -> 200 -> 300'
         """
-        pass
+        if self.is_empty():
+            raise IndexError
+        elif index == 0:
+            self._first = item
+        else:
+            self._rest[index - 1] = item
 
     def __contains__(self, item):
         """Return whether <item> is in this list.
@@ -158,7 +166,12 @@ class LinkedListRec:
         >>> 4 in lst
         False
         """
-        pass
+        if self.is_empty():
+            return False
+        elif self._first == item:
+            return True
+        else:
+            return item in self._rest
 
     def count(self, item):
         """Return the number of times <item> occurs in this list.
@@ -177,7 +190,13 @@ class LinkedListRec:
         >>> lst.count(3)
         1
         """
-        pass
+        if self.is_empty():
+            return 0
+        else:
+            if self._first == item:
+                return 1 + self._rest.count(item)
+            else:
+                return self._rest.count(item)
 
     # ------------------------------------------------------------------------
     # Mutating methods: these methods modify the structure of the list
@@ -201,13 +220,17 @@ class LinkedListRec:
         >>> str(lst)
         ''
         """
-        pass
+        if self.is_empty():
+            raise IndexError
+        else:
+            self._first = self._rest._first
+            self._rest = self._rest._rest
 
     def insert_first(self, item):
         """Insert item at the front of the list.
 
         This should work even if the list is empty.
-
+        @type item: object
         @type self: LinkedListRec
         @rtype: None
 
@@ -222,7 +245,15 @@ class LinkedListRec:
         >>> str(lst)
         '1 -> 2 -> 3'
         """
-        pass
+        if self.is_empty():
+            self._first = item
+            self._rest = LinkedListRec([])
+        elif self._rest.is_empty():
+            self._rest = LinkedListRec([self._first])
+            self._first = item
+        else:
+            self._rest.insert_first(self._first)
+            self._first = item
 
     def pop(self, index):
         """Remove node at position <index>.
@@ -247,6 +278,10 @@ class LinkedListRec:
         Traceback (most recent call last):
         ...
         IndexError
+        >>> lst = LinkedListRec([1, 2, 3, 4, 5, 6, 7])
+        >>> lst.pop(2)
+        >>> str(lst)
+        '1 -> 2 -> 4 -> 5 -> 6 -> 7'
         """
         pass
 
