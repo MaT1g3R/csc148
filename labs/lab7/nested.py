@@ -80,9 +80,18 @@ def equal(obj1, obj2):
     >>> equal([1, 2, [1, 2], 4], [4, 2, [2, 1], 3])
     False
     >>> equal([1,2,3], [1,[2],3])
-    True
+    False
     """
-    return flatten(obj1) == flatten(obj2)
+    if type(obj1) == type(obj2) == int:
+        return obj1 == obj2
+    elif isinstance(obj1, int) or isinstance(obj2, int) or \
+                    len(obj1) != len(obj2):
+        return False
+    else:
+        for i in range(len(obj1)):
+            if not equal(obj1[i], obj2[i]):
+                return False
+        return True
 
 
 def flatten(lst):
