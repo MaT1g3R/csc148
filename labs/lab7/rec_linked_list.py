@@ -222,9 +222,11 @@ class LinkedListRec:
         """
         if self.is_empty():
             raise IndexError
+        elif self._rest.is_empty():
+            self._first = None
         else:
             self._first = self._rest._first
-            self._rest = self._rest._rest
+            self._rest.pop_first()
 
     def insert_first(self, item):
         """Insert item at the front of the list.
@@ -283,7 +285,12 @@ class LinkedListRec:
         >>> str(lst)
         '1 -> 2 -> 4 -> 5 -> 6 -> 7'
         """
-        pass
+        if index >= len(self):
+            raise IndexError
+        elif index == 0:
+            self.pop_first()
+        else:
+            self._rest.pop(index - 1)
 
     def insert(self, index, item):
         """Insert item in to the list at position <index>.
@@ -292,6 +299,7 @@ class LinkedListRec:
         Note that it is possible to add to the end of the list
         (when index == len(self)).
 
+        @type item: object
         @type self: LinkedListRec
         @type index: int
         @rtype: None
@@ -311,7 +319,12 @@ class LinkedListRec:
         ...
         IndexError
         """
-        pass
+        if index > len(self):
+            raise IndexError
+        elif index == 0:
+            self.insert_first(item)
+        else:
+            self._rest.insert(index - 1, item)
 
     # --- Additional Exercises ---
     def map(self, f):
@@ -332,5 +345,15 @@ class LinkedListRec:
         'HELLO -> GOODBYE'
         >>> str(lst.map(len))
         '5 -> 7'
+        >>> lst._first
+        'Hello'
         """
-        pass
+        if self._rest.is_empty():
+            return LinkedListRec([f(self._first)])
+        else:
+            r = LinkedListRec([])
+            r._first = self._first
+            r._rest = self._rest
+            r._first = f(self._first)
+            r._rest = self._rest.map(f)
+            return r
