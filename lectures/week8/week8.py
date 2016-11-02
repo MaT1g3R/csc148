@@ -1,74 +1,85 @@
-""" Trees
-"""
-
-
 class Tree:
-    """ A recursive tree data structure
+    """A recursive tree data structure.
+
+    Note the relationship between this class and LinkedListRec
+    from Lab 5; the only major difference is that _rest
+    has been replaced by _subtrees to handle multiple
+    recursive sub-parts.
+
     === Private Attributes ===
     @type _root: object | None
+        The item stored at the tree's root,
+        or None if the tree is empty.
     @type _subtrees: list[Tree]
+        A list of all subtrees of the tree.
 
     === Representation Invariants ===
-    - if self._root is None then self._subtrees is empty.
-    - self._subtrees does not contain any empty trees
+    - If self._root is None then self._subtrees is empty.
+      This setting of attributes represents an empty Tree.
+    - self._subtrees does not contain any empty Trees.
     """
     def __init__(self, root, subtrees):
-        """
+        """Initialize a new Tree with the given root value
+        and subtrees.
+
+        If <root> is None, the tree is empty.
+        A new tree always has no subtrees.
+
         @type self: Tree
         @type root: object
         @type subtrees: list[Tree]
         @rtype: None
         """
-        self._root = root
-        self._subtrees = subtrees
+        if root is None:
+            self._root = None
+            self._subtrees = None
+        else:
+            self._root = root
+            self._subtrees = subtrees
 
     def is_empty(self):
-        """
+        """Return True if this tree is empty.
+
         @type self: Tree
         @rtype: bool
-
-        >>> tree = Tree(None, [])
-        >>> tree.is_empty()
-        True
-        >>> tree = Tree(10, [])
-        >>> tree.is_empty()
-        False
         """
         return self._root is None
 
     def __len__(self):
-        """
+        """Return the number of nodes contained in this tree.
+
         @type self: Tree
         @rtype: int
-        >>> subtree = Tree(10,[])
-        >>> tree = Tree(100, [subtree])
-        >>> len(tree)
-        2
         """
-        if self.is_empty():
-            return 0
-        else:
-            size = 1
-            for subtree in self._subtrees:
-                size += len(subtree)
-            return size
+        pass
 
     def count(self, item):
-        """
+        """Return the number of occurrences of <item> in this tree.
+
         @type self: Tree
-        @type item: object
         @rtype: int
-        >>> subtree = Tree(10,[])
-        >>> tree = Tree(10, [subtree])
-        >>> tree.count(10)
-        2
-        >>> tree.count(100)
-        0
         """
-        if self.is_empty():
-            return 0
-        else:
-            c = 1 if self._root == item else 0
-            for subtree in self._subtrees:
-                c += subtree.count(item)
-            return c
+        pass
+
+    def print_tree(self):
+        """Print all of the items in this tree.
+
+        For each node, its item is printed before any of its
+        descendants' items. The output is nicely indented.
+
+        You may find this method helpful for debugging.
+
+        @type self: Tree
+        @rtype: None
+        """
+        pass
+
+    def average(self):
+        """Return the average of the items in this tree.
+
+        Return 0 if this tree is empty.
+
+        @type self: Tree
+        @rtype: float
+        """
+        pass
