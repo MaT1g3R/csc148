@@ -50,16 +50,40 @@ class Tree:
 
         @type self: Tree
         @rtype: int
+
+        >>> t0 = Tree(10,[])
+        >>> t1 = Tree(10,[t0])
+        >>> len(t1)
+        2
         """
-        pass
+        if self.is_empty():
+            return 0
+        else:
+            size = 0
+            for subtree in self._subtrees:
+                size += len(subtree)
+            size += 1
+            return size
 
     def count(self, item):
         """Return the number of occurrences of <item> in this tree.
 
+        @type item: object
         @type self: Tree
         @rtype: int
+        >>> t0 = Tree(10,[])
+        >>> t1 = Tree(10,[t0])
+        >>> t1.count(10)
+        2
         """
-        pass
+        if self.is_empty():
+            return 0
+        else:
+            count = 1 if self._root == item else 0
+            for subtree in self._subtrees:
+                if item == subtree._root:
+                    count += 1
+            return count
 
     def print_tree(self):
         """Print all of the items in this tree.
@@ -71,8 +95,22 @@ class Tree:
 
         @type self: Tree
         @rtype: None
+
+        >>> t = Tree(1, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
+        >>> t.print_tree()
         """
-        pass
+        self._print_tree_indented()
+
+    def _print_tree_indented(self, depth=0):
+        """
+        depth represents the number of indentation levels
+        """
+        if len(self._subtrees) == 0:
+            print('  '*depth, self._root)
+        else:
+            print('  '*depth, self._root)
+            for subtree in self._subtrees:
+                subtree._print_tree_indented(depth + 1)
 
     def average(self):
         """Return the average of the items in this tree.
