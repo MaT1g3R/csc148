@@ -249,8 +249,27 @@ class BinaryTree:
 
         @type self: BinaryTree
         @rtype: list
+        >>> C = BinaryTree('C', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> E = BinaryTree('E', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> H = BinaryTree('H', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> D = BinaryTree('D', C, E)
+        >>> I = BinaryTree('I', H, BinaryTree(None, None, None))
+        >>> A = BinaryTree('A',BinaryTree(None, None, None),BinaryTree(None, None, None))
+        >>> B = BinaryTree('B', A, D)
+        >>> G = BinaryTree('G', BinaryTree(None, None, None), I)
+        >>> F = BinaryTree('F', B, G)
+        >>> F.preorder()
+        ['F', 'B', 'A', 'D', 'C', 'E', 'G', 'I', 'H']
         """
-        pass
+
+        if self.is_empty():
+            return []
+        else:
+            re = [self._root]
+            re += self._left.preorder()
+            re += self._right.preorder()
+            return re
+
 
     # TODO: Implement this method!
     def inorder(self):
@@ -258,8 +277,22 @@ class BinaryTree:
 
         @type self: BinaryTree
         @rtype: list
+        >>> C = BinaryTree('C', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> E = BinaryTree('E', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> H = BinaryTree('H', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> D = BinaryTree('D', C, E)
+        >>> I = BinaryTree('I', H, BinaryTree(None, None, None))
+        >>> A = BinaryTree('A',BinaryTree(None, None, None),BinaryTree(None, None, None))
+        >>> B = BinaryTree('B', A, D)
+        >>> G = BinaryTree('G', BinaryTree(None, None, None), I)
+        >>> F = BinaryTree('F', B, G)
+        >>> F.inorder()
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
         """
-        pass
+        if self.is_empty():
+            return []
+        else:
+            return self._left.inorder() + [self._root] + self._right.inorder()
 
     # TODO: Implement this method!
     def postorder(self):
@@ -267,8 +300,24 @@ class BinaryTree:
 
         @type self: BinaryTree
         @rtype: list
+       list
+        >>> C = BinaryTree('C', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> E = BinaryTree('E', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> H = BinaryTree('H', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> D = BinaryTree('D', C, E)
+        >>> I = BinaryTree('I', H, BinaryTree(None, None, None))
+        >>> A = BinaryTree('A',BinaryTree(None, None, None),BinaryTree(None, None, None))
+        >>> B = BinaryTree('B', A, D)
+        >>> G = BinaryTree('G', BinaryTree(None, None, None), I)
+        >>> F = BinaryTree('F', B, G)
+        >>> F.postorder()
+        ['A', 'C', 'E', 'D', 'B', 'H', 'I', 'G', 'F']
         """
-        pass
+        if self.is_empty():
+            return []
+        else:
+            return self._left.postorder() + \
+                   self._right.postorder() + [self._root]
 
 
 if __name__ == '__main__':
