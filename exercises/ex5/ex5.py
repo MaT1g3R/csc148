@@ -60,30 +60,88 @@ class Tree:
 ##############################################################################
 # Task 1: Another tree method
 ##############################################################################
-    # TODO: Implement this method!
     def __eq__(self, other):
         """Return whether <self> and <other> are equal.
 
         @type self: Tree
         @type other: Tree
         @rtype: bool
+
+        >>> tree1 = Tree(10, [])
+        >>> tree2 = Tree(10, [])
+        >>> tree3 = Tree(10000, [])
+        >>> tree1 == tree2
+        True
+        >>> tree3 == tree2
+        False
+        >>> tree4 = Tree(10, [Tree(10,[])])
+        >>> tree5 = Tree(10, [Tree(20,[])])
+        >>> tree4 == tree5
+        False
+        >>> tree1 == tree4
+        False
+        >>> tree6 = Tree(10, [tree4, tree5])
+        >>> tree6 == tree5
+        False
+        >>> tree7 = Tree(10, [Tree(10,[Tree(20,[])])])
+        >>> tree8 = Tree(10, [Tree(10,[Tree(20,[])])])
+        >>> tree7 == tree8
+        True
+        >>> tree9 = Tree(None,[])
+        >>> tree10 = Tree(None,[])
+        >>> tree9 == tree10
+        True
+        >>> tree1 == tree9
+        False
         """
-        pass
+        if self.is_empty():
+            return self._root == other._root
+        elif len(self._subtrees) != len(other._subtrees) \
+                or self._root != other._root:
+            return False
+        else:
+            r_bool = True
+            for i in range(len(self._subtrees)):
+                r_bool = self._subtrees[i] == other._subtrees[i]
+                if r_bool is False:
+                    return False
+            return r_bool
+
 
 ##############################################################################
 # Task 2: Trees and nested lists
 ##############################################################################
-    # TODO: Implement this method!
     def to_nested_list(self):
         """Return the nested list representation of this tree.
 
         @type self: Tree
         @rtype: list
+        >>> tree7 = Tree(10, [Tree(10,[Tree(20,[])])])
+        >>> tree7.to_nested_list()
+        [10, [10, [20]]]
+
+        >>> E = Tree('E',[])
+        >>> F = Tree('F',[])
+        >>> G = Tree('G',[])
+        >>> I = Tree('I',[])
+        >>> J = Tree('J',[])
+        >>> H = Tree('H',[J])
+        >>> B = Tree('B',[E,F])
+        >>> C = Tree('C',[G,H])
+        >>> D = Tree('D',[I])
+        >>> A = Tree('A',[B,C,D])
+        >>> A.to_nested_list()
+        ['A', ['B', ['E'], ['F']], ['C', ['G'], ['H', ['J']]], ['D', ['I']]]
         """
-        pass
+        if len(self._subtrees) == 0:
+            return [self._root]
+        else:
+            nested = [self._root]
+            for i in self._subtrees:
+                nested.append(i.to_nested_list())
+            return nested
 
 
-# TODO: Implement this function!
 def to_tree(obj):
     """Return the Tree which <obj> represents.
 
@@ -95,13 +153,45 @@ def to_tree(obj):
 
     @type obj: list
     @rtype: Tree
-    """
-    pass
+    >>> n = ['A', ['B', ['E'], ['F']], ['C', ['G'], ['H', ['J']]], ['D', ['I']]]
+    >>> E = Tree('E',[])
+    >>> F = Tree('F',[])
+    >>> G = Tree('G',[])
+    >>> I = Tree('I',[])
+    >>> J = Tree('J',[])
+    >>> H = Tree('H',[J])
+    >>> B = Tree('B',[E,F])
+    >>> C = Tree('C',[G,H])
+    >>> D = Tree('D',[I])
+    >>> A = Tree('A',[B,C,D])
+    >>> new_tree = to_tree(n)
+    >>> new_tree == A
+    True
+    >>> print(new_tree.to_nested_list())
+    ['A', ['B', ['E'], ['F']], ['C', ['G'], ['H', ['J']]], ['D', ['I']]]
 
+
+    >>> tree7 = Tree(10, [Tree(10,[Tree(20,[])])])
+    >>> newnew = to_tree([10, [10, [20]]])
+    >>> newnew.to_nested_list()
+    [10, [10, [20]]]
+    >>> tree7 == newnew
+    True
+    """
+    if len(obj) == 1:
+        return Tree(obj[0], [])
+    else:
+        subtree = []
+        for i in obj[1:]:
+            subtree += [to_tree(i)]
+
+        return Tree(obj[0], subtree)
 
 ##############################################################################
 # Task 3: Binary trees
 ##############################################################################
+
+
 class BinaryTree:
     """A class representing a binary tree.
 
