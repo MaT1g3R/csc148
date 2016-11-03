@@ -249,14 +249,15 @@ class BinaryTree:
 
         @type self: BinaryTree
         @rtype: list
-        >>> C = BinaryTree('C', BinaryTree(None,None,None), BinaryTree(None, None, None))
-        >>> E = BinaryTree('E', BinaryTree(None,None,None), BinaryTree(None, None, None))
-        >>> H = BinaryTree('H', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> empty = BinaryTree(None,None,None)
+        >>> C = BinaryTree('C', empty, empty)
+        >>> E = BinaryTree('E', empty,empty)
+        >>> H = BinaryTree('H', empty,empty)
         >>> D = BinaryTree('D', C, E)
-        >>> I = BinaryTree('I', H, BinaryTree(None, None, None))
-        >>> A = BinaryTree('A',BinaryTree(None, None, None),BinaryTree(None, None, None))
+        >>> I = BinaryTree('I', H, empty)
+        >>> A = BinaryTree('A',empty,empty)
         >>> B = BinaryTree('B', A, D)
-        >>> G = BinaryTree('G', BinaryTree(None, None, None), I)
+        >>> G = BinaryTree('G', empty, I)
         >>> F = BinaryTree('F', B, G)
         >>> F.preorder()
         ['F', 'B', 'A', 'D', 'C', 'E', 'G', 'I', 'H']
@@ -270,21 +271,20 @@ class BinaryTree:
             re += self._right.preorder()
             return re
 
-
-    # TODO: Implement this method!
     def inorder(self):
         """Return a list of this tree's items using an *inorder* traversal.
 
         @type self: BinaryTree
         @rtype: list
-        >>> C = BinaryTree('C', BinaryTree(None,None,None), BinaryTree(None, None, None))
-        >>> E = BinaryTree('E', BinaryTree(None,None,None), BinaryTree(None, None, None))
-        >>> H = BinaryTree('H', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> empty = BinaryTree(None,None,None)
+        >>> C = BinaryTree('C', empty, empty)
+        >>> E = BinaryTree('E', empty,empty)
+        >>> H = BinaryTree('H', empty,empty)
         >>> D = BinaryTree('D', C, E)
-        >>> I = BinaryTree('I', H, BinaryTree(None, None, None))
-        >>> A = BinaryTree('A',BinaryTree(None, None, None),BinaryTree(None, None, None))
+        >>> I = BinaryTree('I', H, empty)
+        >>> A = BinaryTree('A',empty,empty)
         >>> B = BinaryTree('B', A, D)
-        >>> G = BinaryTree('G', BinaryTree(None, None, None), I)
+        >>> G = BinaryTree('G', empty, I)
         >>> F = BinaryTree('F', B, G)
         >>> F.inorder()
         ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
@@ -294,21 +294,21 @@ class BinaryTree:
         else:
             return self._left.inorder() + [self._root] + self._right.inorder()
 
-    # TODO: Implement this method!
     def postorder(self):
         """Return a list of this tree's items using a *postorder* traversal.
 
         @type self: BinaryTree
         @rtype: list
        list
-        >>> C = BinaryTree('C', BinaryTree(None,None,None), BinaryTree(None, None, None))
-        >>> E = BinaryTree('E', BinaryTree(None,None,None), BinaryTree(None, None, None))
-        >>> H = BinaryTree('H', BinaryTree(None,None,None), BinaryTree(None, None, None))
+        >>> empty = BinaryTree(None,None,None)
+        >>> C = BinaryTree('C', empty, empty)
+        >>> E = BinaryTree('E', empty,empty)
+        >>> H = BinaryTree('H', empty,empty)
         >>> D = BinaryTree('D', C, E)
-        >>> I = BinaryTree('I', H, BinaryTree(None, None, None))
-        >>> A = BinaryTree('A',BinaryTree(None, None, None),BinaryTree(None, None, None))
+        >>> I = BinaryTree('I', H, empty)
+        >>> A = BinaryTree('A',empty,empty)
         >>> B = BinaryTree('B', A, D)
-        >>> G = BinaryTree('G', BinaryTree(None, None, None), I)
+        >>> G = BinaryTree('G', empty, I)
         >>> F = BinaryTree('F', B, G)
         >>> F.postorder()
         ['A', 'C', 'E', 'D', 'B', 'H', 'I', 'G', 'F']
