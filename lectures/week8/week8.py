@@ -119,5 +119,27 @@ class Tree:
 
         @type self: Tree
         @rtype: float
+        >>> t = Tree(1, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
+        >>> t.average()
+        2.5
+        >>> e = Tree(None, [])
+        >>> e.average()
+        0
         """
-        pass
+        if self.is_empty():
+            return 0
+        else:
+            return self.sum()/len(self)
+
+    def sum(self):
+        """ return sum of the tree
+        @type self: Tree
+        @rtype: int
+        """
+        if self.is_empty():
+            return 0
+        else:
+            s = self._root
+            for i in self._subtrees:
+                s += i.sum()
+            return s
