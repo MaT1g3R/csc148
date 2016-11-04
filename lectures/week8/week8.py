@@ -85,7 +85,7 @@ class Tree:
                     count += 1
             return count
 
-    def print_tree(self):
+    def print_tree(self, depth=0):
         """Print all of the items in this tree.
 
         For each node, its item is printed before any of its
@@ -94,23 +94,18 @@ class Tree:
         You may find this method helpful for debugging.
 
         @type self: Tree
+        @type depth: int
         @rtype: None
 
         >>> t = Tree(1, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
         >>> t.print_tree()
-        """
-        self._print_tree_indented()
-
-    def _print_tree_indented(self, depth=0):
-        """
-        depth represents the number of indentation levels
         """
         if len(self._subtrees) == 0:
             print('  '*depth, self._root)
         else:
             print('  '*depth, self._root)
             for subtree in self._subtrees:
-                subtree._print_tree_indented(depth + 1)
+                subtree.print_tree(depth + 1)
 
     def average(self):
         """Return the average of the items in this tree.
@@ -145,3 +140,35 @@ class Tree:
             for i in self._subtrees:
                 s += i.sum()
             return s
+
+    def delete_item(self, item):
+        """ Delete one occurrence of <item> from this tree
+        return True if <item> was deleted, and false otherwise
+
+        @type self: Tree
+        @type item: object
+        @rtype: bool
+        >>> t = Tree(1, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
+        >>> t.delete_item(1)
+        True
+        >>> t == Tree(None, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
+        True
+        """
+        if self.is_empty():
+            return False
+        elif self._subtrees == []:
+            if item == self._root:
+                self._root = None
+                return True
+            else:
+                return False
+        else:
+            if self._root == item:
+                # Delete the root, but keep all the subtrees
+                self._delete_root() #TODO: implement!
+                return True
+            else:
+                for subtree in self._subtrees:
+                    if subtree.delete_item(item) is True:
+                        return True
+                return False
