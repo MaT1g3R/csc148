@@ -125,6 +125,8 @@ class Tree:
         >>> e = Tree(None, [])
         >>> e.average()
         0
+        >>> sum([1, 2, 3])
+        6
         """
         if self.is_empty():
             return 0
