@@ -243,7 +243,6 @@ class BinaryTree:
         """
         return self._root is None
 
-    # TODO: Implement this method!
     def preorder(self):
         """Return a list of this tree's items using a *preorder* traversal.
 
