@@ -94,6 +94,7 @@ class Tree:
         >>> tree1 == tree9
         False
         """
+
         if self.is_empty():
             return self._root == other._root
         elif len(self._subtrees) != len(other._subtrees) \
