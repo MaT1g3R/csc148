@@ -123,7 +123,6 @@ class Domino:
                           (max(y_coords) + 1) * SQUARE_SIZE))
 
 
-# TODO: implement this function!
 def tile_with_dominoes(n):
     """Return a random tiling of a 2^n by 2^n grid by dominoes.
 
@@ -143,37 +142,22 @@ def tile_with_dominoes(n):
     if n == 1:
         return _tile_2_by_2()
     else:
-        # TODO (1)
-        # Compute four different tilings of a 2^(n-1) by 2^(n-1) grid,
-        # for the four different quadrants.
-        new = _tile_2_by_2()
-        new[0].add_offset(2, 0)
-        new[1].add_offset(2, 0)
+        upper_left_tiling = tile_with_dominoes(n-1)
+        upper_right_tiling = tile_with_dominoes(n-1)
+        lower_left_tiling = tile_with_dominoes(n-1)
+        lower_right_tiling = tile_with_dominoes(n-1)
 
-        new_new = _tile_2_by_2()
-        new_new[0].add_offset(4, 0)
-        new_new[1].add_offset(4, 0)
+        for i in upper_right_tiling:
+            i.add_offset(2**(n-1), 0)
 
+        for i in lower_left_tiling:
+            i.add_offset(0, 2**(n-1))
 
+        for i in lower_right_tiling:
+            i.add_offset(2**(n-1), 2**(n-1))
 
+        return upper_left_tiling + upper_right_tiling + lower_left_tiling + lower_right_tiling
 
-        upper_left_tiling = _tile_2_by_2() + new + new_new
-        upper_right_tiling = []
-        lower_left_tiling = []
-        lower_right_tiling = []
-
-
-        # TODO (2)
-        # Each tiling will have square coordinates between 0 and 2^(n-1),
-        # but these coordinates are only good for the *upper-left* quadrant.
-        # Add an offset to the upper-right, lower-left, and lower-right tilings
-        # so that the dominoes are placed in the correct quadrant.
-        #
-        # Remember that the positions here do *not* depend on SQUARE_SIZE.
-
-        # TODO (3)
-        # Return the combined tiling for all four quadrants.
-        return upper_left_tiling
 
 def _tile_2_by_2():
     """Return a random tiling of a 2 by 2 grid.
