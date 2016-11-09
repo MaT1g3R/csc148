@@ -142,33 +142,59 @@ class Tree:
             return s
 
     def delete_item(self, item):
-        """ Delete one occurrence of <item> from this tree
-        return True if <item> was deleted, and false otherwise
+        """Delete *one* occurrence of item from this tree.
+
+        Return True if <item> was deleted, and False otherwise.
+        Do not modify this tree if it does not contain <item>.
 
         @type self: Tree
         @type item: object
         @rtype: bool
-        >>> t = Tree(1, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
-        >>> t.delete_item(1)
-        True
-        >>> t == Tree(None, [Tree(2,[Tree(4,[])]) , Tree(3,[])])
-        True
         """
         if self.is_empty():
             return False
-        elif self._subtrees == []:
-            if item == self._root:
+        elif len(self._subtrees) == 0:
+            if self._root != item:  # item is not in the tree
+                return False
+            else:  # resulting tree should be empty
                 self._root = None
                 return True
-            else:
-                return False
         else:
             if self._root == item:
-                # Delete the root, but keep all the subtrees
-                self._delete_root() #TODO: implement!
+                self._delete_root()  # delete the root
                 return True
             else:
                 for subtree in self._subtrees:
-                    if subtree.delete_item(item) is True:
+                    deleted = subtree.delete_item(item)
+                    if deleted:
+                        # If the subtree is now empty, remove it.
+                        # Note that removing an item from a list while looping
+                        # through it is usually EXTREMELY DANGEROUS.
+                        # We are only doing it because we return immediately
+                        # afterwards, and so no more loop iterations occur.
+                        if subtree.is_empty():
+                            self._subtrees.remove(subtree)
+                        # One occurrence of the item was deleted, so we're done.
                         return True
+                    else:
+                        # No item was deleted. Continue onto the next iteration.
+                        # Note that this branch is unnecessary; we've only shown
+                        # it to write comments.
+                        pass
+
+                # If we don't return inside the loop, the item is not deleted
+                # from any of the subtrees. In this case, the item does not
+                # appear in <self>.
                 return False
+
+    def _delete_root(self):
+        """Remove the root item of this tree.
+
+        @type self: Tree
+        @rtype: None
+        """
+        # Get the last subtree in this tree.
+        chosen_subtree = self._subtrees.pop()
+
+        self._root = chosen_subtree._root
+        self._subtrees.extend(chosen_subtree._subtrees)
