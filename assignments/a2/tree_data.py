@@ -192,9 +192,12 @@ if __name__ == '__main__':
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_all(config='pylintrc.txt')
 
-    tree = FileSystemTree('A:/Python Project'
-                          's/csc148/assignments/a2/population.py')
+    macdr = '/Users/PeijunsMac/Desktop/csc148/'
+    windr = 'A:/Python Projects/csc148/'
+    common = 'assignments/a2/tree_data.py'
+
+    tree = FileSystemTree(os.path.join(macdr, common))
     print(tree.data_size)
 
-    tree2 = FileSystemTree('A:/Python Projects/csc148/assignments')
+    tree2 = FileSystemTree(macdr)
     print(tree2.to_nested_list())
