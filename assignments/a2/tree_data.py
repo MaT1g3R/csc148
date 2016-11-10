@@ -123,7 +123,15 @@ class AbstractTree:
         # Programming tip: use "tuple unpacking assignment" to easily extract
         # coordinates of a rectangle, as follows.
         # x, y, width, height = rect
-        pass
+        if self.data_size <= 0:
+            return []
+        elif self._subtrees == []:
+            return (0, 0, 1024, 738), self.colour
+        else:
+            r = []
+            for i in self._subtrees:
+                r += i.generate_treemap(rect)
+
 
     def get_separator(self):
         """Return the string used to separate nodes in the string
