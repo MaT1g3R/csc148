@@ -148,7 +148,11 @@ class BinarySearchTree:
         @type self: BinarySearchTree
         @rtype: list[(int, list)]
         """
-        return self._lvl_helper()
+        r = self.bsf()
+        new = []
+        for i in r:
+            new +=[i._root]
+        return new
 
     def _lvl_helper(self, lvl=1):
         """
@@ -164,16 +168,17 @@ class BinarySearchTree:
                 r += self._lvl_helper(lvl+1)
             return r
 
-    def _lvl_helper_nohelper(self, lvl=1):
-        """
-        @type self: BinarySearchTree
-        @type lvl: int
-        @rtype: list[(int, list)]
-        """
-        if self.is_empty():
-            return []
-        else:
-            r = []
+    def subtrees(self):
+        return [self._left, self._right]
+
+    def bsf(self):
+        r = [self]
+        for i in self.subtrees():
+            r += i.subtrees()
+        return r
+
+
+
 
 if __name__ == '__main__':
     import python_ta
