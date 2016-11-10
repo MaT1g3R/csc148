@@ -59,7 +59,8 @@ class AbstractTree:
         """Initialize a new AbstractTree.
 
         If <subtrees> is empty, <data_size> is used to initialize this tree's
-        data_size. Otherwise, the <data_size> parameter is ignored, and this tree's
+        data_size. Otherwise, the <data_size> parameter is ignored,
+         and this tree's
         data_size is computed from the data_sizes of the subtrees.
 
         If <subtrees> is not empty, <data_size> should not be specified.
@@ -153,6 +154,7 @@ class AbstractTree:
                 nested.append(i.to_nested_list())
             return nested
 
+
 class FileSystemTree(AbstractTree):
     """A tree representation of files and folders in a file system.
 
@@ -176,7 +178,8 @@ class FileSystemTree(AbstractTree):
         """
 
         if not os.path.isdir(path):
-            AbstractTree.__init__(self, os.path.basename(path), [], os.path.getsize(path))
+            AbstractTree.__init__(self, os.path.basename(path),
+                                  [], os.path.getsize(path))
         else:
             subtrees = []
             for filename in os.listdir(path):
@@ -187,10 +190,10 @@ class FileSystemTree(AbstractTree):
 if __name__ == '__main__':
     import python_ta
     # Remember to change this to check_all when cleaning up your code.
-    python_ta.check_errors(config='pylintrc.txt')
+    python_ta.check_all(config='pylintrc.txt')
 
-    tree = FileSystemTree\
-    ('A:/Python Projects/csc148/assignments/a2/population.py')
+    tree = FileSystemTree('A:/Python Project'
+                          's/csc148/assignments/a2/population.py')
     print(tree.data_size)
 
     tree2 = FileSystemTree('A:/Python Projects/csc148/assignments')
