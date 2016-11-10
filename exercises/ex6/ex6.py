@@ -102,7 +102,6 @@ class BinarySearchTree:
 ##############################################################################
 # Task 1: More BST practice
 ##############################################################################
-    # TODO: Implement this method!
     def num_less_than(self, item):
         """Return the number of items in this BST that are less than <item>.
 
@@ -110,9 +109,14 @@ class BinarySearchTree:
         @type item: object
         @rtype: int
         """
-        pass
+        if self.is_empty():
+            return 0
+        elif self._root < item:
+            return 1 + self._left.num_less_than(item) \
+                   + self._right.num_less_than(item)
+        else:
+            return self._left.num_less_than(item)
 
-    # TODO: Implement this method!
     def items_at_depth(self, d):
         """Return a sorted list of all items in this BST at depth <d>.
 
@@ -125,9 +129,14 @@ class BinarySearchTree:
         @type d: int
         @rtype: list
         """
-        pass
+        if self.is_empty():
+            return []
+        elif d == 1:
+            return [self._root]
+        else:
+            return self._left.items_at_depth(d-1) +\
+                   self._right.items_at_depth(d-1)
 
-    # TODO: Implement this method!
     def levels(self):
         """Return a list of items in the tree, separated by level.
 
@@ -139,8 +148,32 @@ class BinarySearchTree:
         @type self: BinarySearchTree
         @rtype: list[(int, list)]
         """
-        pass
+        return self._lvl_helper()
 
+    def _lvl_helper(self, lvl=1):
+        """
+        @type self: BinarySearchTree
+        @type lvl: int
+        @rtype: list[(int, list)]
+        """
+        if self.is_empty():
+            pass
+        else:
+            r = [(lvl, self.items_at_depth(lvl))]
+            if self.items_at_depth(lvl+1) != []:
+                r += self._lvl_helper(lvl+1)
+            return r
+
+    def _lvl_helper_nohelper(self, lvl=1):
+        """
+        @type self: BinarySearchTree
+        @type lvl: int
+        @rtype: list[(int, list)]
+        """
+        if self.is_empty():
+            return []
+        else:
+            r = []
 
 if __name__ == '__main__':
     import python_ta
