@@ -80,9 +80,19 @@ class AbstractTree:
         self._subtrees = subtrees
         self._parent_tree = None
 
-        # TODO: Complete this constructor by doing two things:
-        # 1. Initialize self.colour and self.data_size, according to the docstring.
-        # 2. Properly set all _parent_tree attributes in self._subtrees
+        self.colour = (randint(0, 255),
+                       randint(0, 255),
+                       randint(0, 255))
+
+        if self._subtrees == []:
+            self.data_size = data_size
+        else:
+            self.data_size = 0
+            for t in self._subtrees:
+                self.data_size += t.data_size
+
+        for t in self._subtrees:
+            t._parent_tree = self
 
     def is_empty(self):
         """Return True if this tree is empty.
@@ -129,6 +139,19 @@ class AbstractTree:
         """
         raise NotImplementedError
 
+    def to_nested_list(self):
+        """Return the nested list representation of this tree.
+
+        @type self: Tree
+        @rtype: list
+        """
+        if len(self._subtrees) == 0:
+            return [self._root]
+        else:
+            nested = [self._root]
+            for i in self._subtrees:
+                nested.append(i.to_nested_list())
+            return nested
 
 class FileSystemTree(AbstractTree):
     """A tree representation of files and folders in a file system.
@@ -151,16 +174,24 @@ class FileSystemTree(AbstractTree):
         @type path: str
         @rtype: None
         """
-        # TODO: implement this method according to its docstring.
-        # Remember that you should recursively go through the file system
-        # and create new FileSystemTree objects for each file and folder
-        # encountered.
-        #
-        # Also remember to make good use of the superclass constructor!
-        pass
 
+        if not os.path.isdir(path):
+            AbstractTree.__init__(self, os.path.basename(path), [], os.path.getsize(path))
+        else:
+            subtrees = []
+            for filename in os.listdir(path):
+                subitem = os.path.join(path, filename)
+                subtrees += [FileSystemTree(subitem)]
+            AbstractTree.__init__(self, os.path.basename(path), subtrees)
 
 if __name__ == '__main__':
     import python_ta
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_errors(config='pylintrc.txt')
+
+    tree = FileSystemTree\
+    ('A:/Python Projects/csc148/assignments/a2/population.py')
+    print(tree.data_size)
+
+    tree2 = FileSystemTree('A:/Python Projects/csc148/assignments')
+    print(tree2.to_nested_list())
