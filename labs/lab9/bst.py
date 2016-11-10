@@ -132,8 +132,10 @@ class BinarySearchTree:
         >>> bst.height()
         2
         """
-        # TODO: implement this method!
-        pass
+        if self.is_empty():
+            return 0
+        else:
+            return max(1+self._left.height(), 1+self._right.height())
 
     def items(self):
         """Return all of the items in the BST in sorted order.
@@ -155,8 +157,10 @@ class BinarySearchTree:
         >>> bst.items()
         [2, 3, 5, 7, 9, 11, 13]
         """
-        # TODO: implement this method!
-        pass
+        if self.is_empty():
+            return []
+        else:
+            return self._left.items() + [self._root] + self._right.items()
 
     def smaller(self, item):
         """Return the items in this BST strictly less than <item>.
@@ -180,12 +184,22 @@ class BinarySearchTree:
         >>> bst.smaller(13)
         [2, 3, 5, 7, 9, 11]
         """
-        # TODO: implement this method!
-        pass
 
+        # r = []
+        # for i in self.items():
+        #     if i < item:
+        #         r.append(i)
+        # return r
+        if self.is_empty():
+            return []
+        elif item <= self._root:
+            return self._left.items()
+        else:
+            return self._left.items() + [self._root] + self._right.smaller(item)
     # ------------------------------------------------------------------------
     # Lab 9 Task 2
     # ------------------------------------------------------------------------
+
     def insert(self, item):
         """Insert <item> into this BST, maintaining the BST property.
 
@@ -205,8 +219,12 @@ class BinarySearchTree:
         >>> bst._right._root
         20
         """
-        # TODO: implement this method!
-        pass
+        if self.is_empty():
+            self._root = item
+        elif item <= self._root:
+            self._left.insert(item)
+        else:
+            self._right.insert(item)
 
     # ------------------------------------------------------------------------
     # Lab 9 Task 3
@@ -245,8 +263,11 @@ class BinarySearchTree:
               5
               11
         """
-        # TODO: implement this method
-        pass
+
+        pivit = self._left
+        self._left = pivit._right
+        pivit._right = self
+
 
     def rotate_left(self):
         """Rotate the BST counter-clockwise, i.e. make the right subtree the root.
