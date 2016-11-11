@@ -135,13 +135,17 @@ class AbstractTree:
                 else:
                     ratio = 0
                 if width > height:
-                    r.append(((x, y, round(width * ratio), height), i.colour))
-                    r += i.generate_treemap((x, y, round(width * ratio), height))
-                    x += round(width * ratio)
+                    r.append(
+                        ((x, y, math.floor(width * ratio), height), i.colour))
+                    r += i.generate_treemap(
+                        (x, y, math.floor(width * ratio), height))
+                    x += math.floor(width * ratio)
                 else:
-                    r.append(((x, y, width, round(height * ratio)), i.colour))
-                    r += i.generate_treemap((x, y, width, round(height * ratio)))
-                    y += round(height * ratio)
+                    r.append(
+                        ((x, y, width, math.floor(height * ratio)), i.colour))
+                    r += i.generate_treemap(
+                        (x, y, width, math.floor(height * ratio)))
+                    y += math.floor(height * ratio)
             return r
 
     def get_separator(self):
@@ -205,6 +209,14 @@ class FileSystemTree(AbstractTree):
                 subitem = os.path.join(path, filename)
                 subtrees += [FileSystemTree(subitem)]
             AbstractTree.__init__(self, os.path.basename(path), subtrees)
+
+    def get_separator(self):
+        """ Use </> to indicate the path for the file tree
+        @type self: FileSystemTree
+        @rtype: str
+        """
+        return '/'
+
 
 if __name__ == '__main__':
     import python_ta

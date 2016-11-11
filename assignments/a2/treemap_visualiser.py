@@ -39,7 +39,7 @@ def run_visualisation(tree):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     # Render the initial display of the static treemap.
-    render_display(screen, tree, '')
+    render_display(screen, tree, 'Kappa')
 
     # Start an event loop to respond to events.
     event_loop(screen, tree)
@@ -60,10 +60,17 @@ def render_display(screen, tree, text):
     # First, clear the screen
     pygame.draw.rect(screen, pygame.color.THECOLORS['black'],
                      (0, 0, WIDTH, HEIGHT))
-    for i in tree.generate_treemap():
-        pygame.draw.rect(screen, i[1], i[0])
+    treemap = tree.generate_treemap()
+    for i in treemap:
+        if i == treemap[-1]:  # Treatment of the very last block
+            x, y, width, height = i[0]
+            width += WIDTH - (x+width)
+            height += HEIGHT - (y + height + FONT_HEIGHT)
+            pygame.draw.rect(screen, i[1], (x, y, width, height))
+        else:
+            pygame.draw.rect(screen, i[1], i[0])
 
-    _render_text(screen, 'Kappa')
+    _render_text(screen, text)
     # This must be called *after* all other pygame functions have run.
     pygame.display.flip()
 
