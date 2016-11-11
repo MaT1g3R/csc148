@@ -103,7 +103,7 @@ class AbstractTree:
         """
         return self._root is None
 
-    def generate_treemap(self, rect=(0, 0, 1024, 738)):
+    def generate_treemap(self, rect):
         """Run the treemap algorithm on this tree and return the rectangles.
 
         Each returned tuple contains a pygame rectangle and a colour:

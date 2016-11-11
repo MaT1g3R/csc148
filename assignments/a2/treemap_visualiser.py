@@ -60,7 +60,7 @@ def render_display(screen, tree, text):
     # First, clear the screen
     pygame.draw.rect(screen, pygame.color.THECOLORS['black'],
                      (0, 0, WIDTH, HEIGHT))
-    treemap = tree.generate_treemap()
+    treemap = tree.generate_treemap((0, 0, WIDTH, TREEMAP_HEIGHT))
     for i in treemap:
         if i == treemap[-1]:  # Treatment of the very last block
             x, y, width, height = i[0]
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     windr = 'A:/Python Projects/csc148'
     common = 'assignments/a2/tree_data.py'
 
-    run_treemap_file_system(macdr)
+    run_treemap_file_system(windr)
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()
