@@ -63,6 +63,7 @@ def render_display(screen, tree, text):
     for i in tree.generate_treemap():
         pygame.draw.rect(screen, i[1], i[0])
 
+    _render_text(screen, 'Kappa')
     # This must be called *after* all other pygame functions have run.
     pygame.display.flip()
 
