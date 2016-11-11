@@ -223,13 +223,13 @@ if __name__ == '__main__':
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_all(config='pylintrc.txt')
 
-    macdr = '/Users/PeijunsMac/Desktop/csc148/'
+    macdr = '/Users/PeijunsMac/Desktop/csc148/assignments'
     windr = 'A:/Python Projects/csc148/'
-    common = 'assignments/a2/tree_data.py'
+    common = 'a2/tree_data.py'
 
-    tree = FileSystemTree(os.path.join(windr, common))
+    tree = FileSystemTree(os.path.join(macdr, common))
     print(tree.data_size)
 
-    tree2 = FileSystemTree(windr)
-    # print(tree2.to_nested_list())
-    print(tree2.generate_treemap())
+    tree2 = FileSystemTree(macdr)
+    print(tree2.to_nested_list())
+    # print(tree2.generate_treemap())

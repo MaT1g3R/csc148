@@ -150,11 +150,11 @@ if __name__ == '__main__':
     # call, with the '' replaced by a path like
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
-    macdr = '/Users/PeijunsMac/Desktop/csc148/'
+    macdr = '/Users/PeijunsMac/Desktop/csc148'
     windr = 'A:/Python Projects/csc148'
     common = 'assignments/a2/tree_data.py'
 
-    run_treemap_file_system(windr)
+    run_treemap_file_system(macdr)
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()
