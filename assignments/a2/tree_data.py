@@ -103,7 +103,7 @@ class AbstractTree:
         """
         return self._root is None
 
-    def generate_treemap(self, rect):
+    def generate_treemap(self, rect=(0, 0, 1024, 738)):
         """Run the treemap algorithm on this tree and return the rectangles.
 
         Each returned tuple contains a pygame rectangle and a colour:
@@ -116,22 +116,33 @@ class AbstractTree:
             Input is in the pygame format: (x, y, width, height)
         @rtype: list[((int, int, int, int), (int, int, int))]
         """
-        # TODO: implement this method!
         # Read the handout carefully to help get started identifying base cases,
         # and the outline of a recursive step.
         #
         # Programming tip: use "tuple unpacking assignment" to easily extract
         # coordinates of a rectangle, as follows.
         # x, y, width, height = rect
-        if self.data_size <= 0:
+        if self.is_empty():
             return []
-        elif self._subtrees == []:
-            return (0, 0, 1024, 738), self.colour
+        elif self._subtrees == [] and self.data_size > 0:
+            return [(rect, self.colour)]
         else:
             r = []
+            x, y, width, height = rect
             for i in self._subtrees:
-                r += i.generate_treemap(rect)
-
+                if self.data_size > 0:
+                    ratio = i.data_size/self.data_size
+                else:
+                    ratio = 0
+                if width > height:
+                    r.append(((x, y, round(width * ratio), height), i.colour))
+                    r += i.generate_treemap((x, y, round(width * ratio), height))
+                    x += round(width * ratio)
+                else:
+                    r.append(((x, y, width, round(height * ratio)), i.colour))
+                    r += i.generate_treemap((x, y, width, round(height * ratio)))
+                    y += round(height * ratio)
+            return r
 
     def get_separator(self):
         """Return the string used to separate nodes in the string
@@ -204,8 +215,9 @@ if __name__ == '__main__':
     windr = 'A:/Python Projects/csc148/'
     common = 'assignments/a2/tree_data.py'
 
-    tree = FileSystemTree(os.path.join(macdr, common))
+    tree = FileSystemTree(os.path.join(windr, common))
     print(tree.data_size)
 
-    tree2 = FileSystemTree(macdr)
-    print(tree2.to_nested_list())
+    tree2 = FileSystemTree(windr)
+    # print(tree2.to_nested_list())
+    print(tree2.generate_treemap())

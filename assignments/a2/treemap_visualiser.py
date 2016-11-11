@@ -60,7 +60,8 @@ def render_display(screen, tree, text):
     # First, clear the screen
     pygame.draw.rect(screen, pygame.color.THECOLORS['black'],
                      (0, 0, WIDTH, HEIGHT))
-    # TODO: Implement this function!
+    for i in tree.generate_treemap():
+        pygame.draw.rect(screen, i[1], i[0])
 
     # This must be called *after* all other pygame functions have run.
     pygame.display.flip()
@@ -142,10 +143,10 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     macdr = '/Users/PeijunsMac/Desktop/csc148/'
-    windr = 'A:/Python Projects/csc148/'
+    windr = 'A:/Python Projects/csc148'
     common = 'assignments/a2/tree_data.py'
 
-    run_treemap_file_system(macdr)
+    run_treemap_file_system(windr)
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()
