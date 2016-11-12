@@ -123,10 +123,13 @@ def event_loop(screen, tree):
                 if selected_leaf[0] is None:
                     render_display(screen, tree, '')
                 else:
-                    render_display(screen, tree, tree.get_separator().join(selected_leaf[0].get_path()))
+                    render_display(screen, tree, tree.get_separator().
+                                   join(selected_leaf[0].get_path()) + ' (' +
+                                   str(selected_leaf[0].data_size) + ')')
             elif event.button == 3:  # right click
                 if selected_leaf != []:
-                    if tree.get_item_by_color(current_color) == selected_leaf[0]:
+                    if tree.get_item_by_color(current_color) \
+                            == selected_leaf[0]:
                         selected_leaf.clear()
                 deleting = tree.get_item_by_color(current_color)
                 if deleting is not None:
@@ -167,7 +170,7 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     macdr = '/Users/PeijunsMac/Desktop/csc148'
-    windr = 'A:/Python Projects/csc148 _backup'
+    windr = 'A:/Python Projects/csc148/assignments'
     run_treemap_file_system(windr)
 
     # To check your work for Task 5, uncomment the following function call.

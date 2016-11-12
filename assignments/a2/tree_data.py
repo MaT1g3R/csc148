@@ -203,9 +203,10 @@ class AbstractTree:
         @rtype: AbstractTree
             return the AbstractTree with the color <color>
         """
+
         if self.is_empty():
             pass
-        elif self.colour == color:
+        elif self.colour == color and self._subtrees == []:
             return self
         else:
             for s in self._subtrees:
@@ -230,8 +231,12 @@ class AbstractTree:
         @type item: AbstractTree
         @rtype: None
         """
-        if self == item:
-            self._parent_tree._subtrees.remove(self)
+        if self._parent_tree is None:
+            pass
+        elif self == item:
+            self._root = None
+            self._subtrees = []
+            self._parent_tree = None
         else:
             for s in self._subtrees:
                 s.delete_item(item)
@@ -245,6 +250,7 @@ class AbstractTree:
             return [self._root]
         else:
             return self._parent_tree.get_path() + [self._root]
+
 
 class FileSystemTree(AbstractTree):
     """A tree representation of files and folders in a file system.
