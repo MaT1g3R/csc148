@@ -97,7 +97,8 @@ class AbstractTree:
 
         # Make sure no dupelicate colours happen
         if self._subtrees != []:
-            while self.colour in self.exclude_colors():
+            while self.colour in self.exclude_colors() \
+                    or self.colour == (0, 0, 0):
                 self.colour = (randint(0, 255),
                                randint(0, 255),
                                randint(0, 255))
