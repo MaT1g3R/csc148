@@ -97,8 +97,7 @@ class AbstractTree:
 
         # Make sure no dupelicate colours happen
         if self._subtrees != []:
-            while self.colour in self.exclude_colors() \
-                    or self.colour == (0, 0, 0):
+            while self.colour in self.exclude_colors():
                 self.colour = (randint(0, 255),
                                randint(0, 255),
                                randint(0, 255))
@@ -115,7 +114,7 @@ class AbstractTree:
             for s in self._subtrees:
                 r += [s.colour]
                 r += s.exclude_colors()
-            return r
+            return r + [(0, 0, 0)]
 
     def is_empty(self):
         """Return True if this tree is empty.
