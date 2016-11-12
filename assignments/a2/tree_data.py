@@ -146,7 +146,8 @@ class AbstractTree:
         if self.is_empty():
             pass
         elif self._subtrees == []:
-            return [(rect, self.colour)]
+            x, y, width, height = rect
+            return [((x, y, width, height), self.colour)]
         else:
             r = []
             x, y, width, height = rect
@@ -155,12 +156,27 @@ class AbstractTree:
                     ratio = self._subtrees[i].data_size/self.data_size
                     if width > height:
                         small_w = math.floor(width*ratio)
-                        r += self._subtrees[i].generate_treemap((x, y, small_w, height))
+                        r += self._subtrees[i].generate_treemap(
+                            (x, y, small_w, height))
                         x += small_w
+                        for sub_i in range(len(r)):
+                            a, b, c, d = r[sub_i][0]
+                            e = r[sub_i][1]
+                            c += width - a - c
+                            r[sub_i] = ((a, b, c, d), e)
                     else:
                         small_h = math.floor(height * ratio)
-                        r += self._subtrees[i].generate_treemap((x, y, width, small_h))
+                        r += self._subtrees[i].generate_treemap(
+                            (x, y, width, small_h))
                         y += small_h
+
+                        for sub_i in range(len(r)):
+
+                            a, b, c, d = r[sub_i][0]
+                            e = r[sub_i][1]
+                            d += height - b - d
+                            r[sub_i] = ((a, b, c, d), e)
+
             return r
 
     def get_separator(self):
@@ -216,8 +232,10 @@ class AbstractTree:
         @type change: int
         @rtype: None
         """
-        self.data_size += change
-        if self._parent_tree is not None:
+        if self._parent_tree is None:
+            self.data_size += change
+        else:
+            self.data_size += change
             self._parent_tree.re_calculate_size(change)
 
     def delete_item(self, item):
@@ -236,15 +254,23 @@ class AbstractTree:
             for s in self._subtrees:
                 s.delete_item(item)
 
-    def get_path(self):
-        """ format path for self and return it
+    def get_path_helper(self):
+        """ format path for self and return it in a list
         @type self: AbstractTree
         @rtype: list[str]
         """
         if self._parent_tree is None:
             return [self._root]
         else:
-            return self._parent_tree.get_path() + [self._root]
+            return self._parent_tree.get_path_helper() + [self._root]
+
+    def get_path_size(self):
+        """ return the full path of item in a string
+        @type self: AbstractTree
+        @rtype: str
+        """
+        return self.get_separator().join(self.get_path_helper()) +\
+            ' ({})'.format(self.data_size)
 
 
 class FileSystemTree(AbstractTree):

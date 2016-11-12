@@ -112,14 +112,18 @@ def event_loop(screen, tree):
             pos = event.pos
             current_color = screen.get_at(pos)[:3]
             if event.button == 1:  # left click
-                selected_leaf.clear()
-                selected_leaf += [tree.get_item_by_color(current_color)]
-                if selected_leaf[0] is None:
-                    render_display(screen, tree, '')
+                if selected_leaf == []:
+                    selected_leaf.append(tree.get_item_by_color(current_color))
+                elif selected_leaf[0] == tree.get_item_by_color(current_color):
+                    selected_leaf.clear()
                 else:
-                    render_display(screen, tree, tree.get_separator().
-                                   join(selected_leaf[0].get_path()) + ' (' +
-                                   str(selected_leaf[0].data_size) + ')')
+                    selected_leaf.clear()
+                    selected_leaf.append(tree.get_item_by_color(current_color))
+                if selected_leaf != [] and selected_leaf != [None]:
+                    render_display(screen, tree, selected_leaf[0].get_path_size())
+                else:
+                    render_display(screen, tree, '')
+
             elif event.button == 3:  # right click
                 if selected_leaf != []:
                     if tree.get_item_by_color(current_color) \
@@ -136,16 +140,10 @@ def event_loop(screen, tree):
             if selected_leaf != []:
                 changed_size = math.ceil(selected_leaf[0].data_size/100)
                 if event.key == pygame.K_UP:
-                    selected_leaf[0].data_size += changed_size
                     selected_leaf[0].re_calculate_size(changed_size)
-
                 elif event.key == pygame.K_DOWN:
-                    selected_leaf[0].data_size -= changed_size
                     selected_leaf[0].re_calculate_size(-changed_size)
-
-            render_display(screen, tree, tree.get_separator().
-                           join(selected_leaf[0].get_path()) + ' (' +
-                           str(selected_leaf[0].data_size) + ')')
+            render_display(screen, tree, selected_leaf[0].get_path_size())
 
 
 def run_treemap_file_system(path):
@@ -179,7 +177,7 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     _macdr = '/Users/PeijunsMac/Desktop/csc148'
-    _windr = 'A:/Python Projects/csc148/assignments'
+    _windr = 'A:/Python Projects/csc148 _backup'
     run_treemap_file_system(_windr)
 
     # To check your work for Task 5, uncomment the following function call.
