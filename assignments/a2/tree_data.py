@@ -95,6 +95,27 @@ class AbstractTree:
         for t in self._subtrees:
             t._parent_tree = self
 
+        # Make sure no dupelicate colours happen
+        if self._subtrees != []:
+            while self.colour in self.exclude_colors():
+                self.colour = (randint(0, 255),
+                               randint(0, 255),
+                               randint(0, 255))
+
+    def exclude_colors(self):
+        """ Return all colours in all subtrees
+        @type self: AbstractTree
+        @rtype: list[(int, int, int)]
+        """
+        if self._subtrees == []:
+            return [self.colour]
+        else:
+            r = []
+            for s in self._subtrees:
+                r += [s.colour]
+                r += s.exclude_colors()
+            return r
+
     def is_empty(self):
         """Return True if this tree is empty.
 
@@ -130,22 +151,21 @@ class AbstractTree:
             r = []
             x, y, width, height = rect
             for i in self._subtrees:
-                if self.data_size > 0:
+                if i.data_size > 0:
                     ratio = i.data_size/self.data_size
-                else:
-                    ratio = 0
-                if width > height:
-                    r.append(
-                        ((x, y, math.floor(width * ratio), height), i.colour))
-                    r += i.generate_treemap(
-                        (x, y, math.floor(width * ratio), height))
-                    x += math.floor(width * ratio)
-                else:
-                    r.append(
-                        ((x, y, width, math.floor(height * ratio)), i.colour))
-                    r += i.generate_treemap(
-                        (x, y, width, math.floor(height * ratio)))
-                    y += math.floor(height * ratio)
+
+                    if width > height:
+                        r.append(((x, y, math.floor(width * ratio),
+                                   height), i.colour))
+                        r += i.generate_treemap(
+                            (x, y, math.floor(width * ratio), height))
+                        x += math.floor(width * ratio)
+                    else:
+                        r.append(((x, y, width,
+                                   math.floor(height * ratio)), i.colour))
+                        r += i.generate_treemap(
+                            (x, y, width, math.floor(height * ratio)))
+                        y += math.floor(height * ratio)
             return r
 
     def get_separator(self):
@@ -173,9 +193,50 @@ class AbstractTree:
             return [self._root]
         else:
             nested = [self._root]
-            for i in self._subtrees:
-                nested.append(i.to_nested_list())
+            for subtree in self._subtrees:
+                nested.append(subtree.to_nested_list())
             return nested
+
+    def get_item_by_color(self, color):
+        """ return the item with the color <color>
+        @type self: AbstractTree
+        @type color: tuple(int, int, int)
+            the color that the user inputs
+        @rtype: AbstractTree
+            return the AbstractTree with the color <color>
+        """
+        if self.is_empty():
+            pass
+        elif self.colour == color:
+            return self
+        else:
+            for s in self._subtrees:
+                if s.get_item_by_color(color) is not None:
+                    return s.get_item_by_color(color)
+
+    def re_calculate_size(self, change):
+        """ re calculate the size of everything
+        @type self: AbstractTree
+        @type change: int
+        @rtype: None
+        """
+        if self._parent_tree is None:
+            self.data_size += change
+        else:
+            self.data_size += change
+            self._parent_tree.re_calculate_size(change)
+
+    def delete_item(self, item):
+        """ delete item from the tree
+        @type self: AbstractTree
+        @type item: AbstractTree
+        @rtype: None
+        """
+        if self == item:
+            self._parent_tree._subtrees.remove(self)
+        else:
+            for s in self._subtrees:
+                s.delete_item(item)
 
 
 class FileSystemTree(AbstractTree):
@@ -224,12 +285,12 @@ if __name__ == '__main__':
     python_ta.check_all(config='pylintrc.txt')
 
     macdr = '/Users/PeijunsMac/Desktop/csc148/assignments'
-    windr = 'A:/Python Projects/csc148/'
+    windr = 'A:/Python Projects/csc148/assignments'
     common = 'a2/tree_data.py'
 
-    tree = FileSystemTree(os.path.join(macdr, common))
+    tree = FileSystemTree(os.path.join(windr, common))
     print(tree.data_size)
 
-    tree2 = FileSystemTree(macdr)
+    tree2 = FileSystemTree(windr)
     print(tree2.to_nested_list())
     # print(tree2.generate_treemap())

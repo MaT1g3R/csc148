@@ -39,7 +39,7 @@ def run_visualisation(tree):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     # Render the initial display of the static treemap.
-    render_display(screen, tree, 'Kappa')
+    render_display(screen, tree, '')
 
     # Start an event loop to respond to events.
     event_loop(screen, tree)
@@ -69,7 +69,6 @@ def render_display(screen, tree, text):
             pygame.draw.rect(screen, i[1], (x, y, width, height))
         else:
             pygame.draw.rect(screen, i[1], i[0])
-
     _render_text(screen, text)
     # This must be called *after* all other pygame functions have run.
     pygame.display.flip()
@@ -107,17 +106,34 @@ def event_loop(screen, tree):
     # selected leaf (type AbstractTree | None).
     # But feel free to remove it, and/or add new variables, to help keep
     # track of the state of the program.
-    selected_leaf = None
-
+    selected_leaf = []
     while True:
         # Wait for an event
         event = pygame.event.poll()
         if event.type == pygame.QUIT:
             return
-
-        # TODO: detect and respond to other types of events.
         # Remember to call render_display if any data_sizes change,
         # as the treemap will change in this case.
+        if event.type == pygame.MOUSEBUTTONUP:
+            pos = event.pos
+            current_color = screen.get_at(pos)[:3]
+            if event.button == 1:  # left click
+                selected_leaf.clear()
+                selected_leaf += [tree.get_item_by_color(current_color)]
+                if selected_leaf[0] is None:
+                    render_display(screen, tree, '')
+                else:
+                    render_display(screen, tree, str(selected_leaf[0]._root) + ' ' + str(selected_leaf[0].data_size))
+            elif event.button == 3:  # right click
+                if selected_leaf != []:
+                    if tree.get_item_by_color(current_color) == selected_leaf[0]:
+                        selected_leaf.clear()
+                deleting = tree.get_item_by_color(current_color)
+                if deleting is not None:
+                    deleted_size = -deleting.data_size
+                    deleting.re_calculate_size(deleted_size)
+                    tree.delete_item(deleting)
+                    render_display(screen, tree, '')
 
 
 def run_treemap_file_system(path):
@@ -151,8 +167,8 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     macdr = '/Users/PeijunsMac/Desktop/csc148'
-    windr = 'A:/Python Projects/csc148'
-    common = 'assignments/a2/tree_data.py'
+    windr = 'A:/Python Projects/csc148/'
+
 
     run_treemap_file_system(windr)
 
