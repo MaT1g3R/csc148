@@ -151,21 +151,19 @@ class AbstractTree:
             r = []
             x, y, width, height = rect
             for i in self._subtrees:
-                if i.data_size > 0:
+                if i.data_size > 0:  # empty folders are ignored
                     ratio = i.data_size/self.data_size
 
                     if width > height:
-                        r.append(((x, y, math.floor(width * ratio),
-                                   height), i.colour))
-                        r += i.generate_treemap(
-                            (x, y, math.floor(width * ratio), height))
-                        x += math.floor(width * ratio)
+                        small_w = math.floor(width*ratio)
+                        r.append(((x, y, small_w, height), i.colour))
+                        r += i.generate_treemap((x, y, small_w, height))
+                        x += small_w
                     else:
-                        r.append(((x, y, width,
-                                   math.floor(height * ratio)), i.colour))
-                        r += i.generate_treemap(
-                            (x, y, width, math.floor(height * ratio)))
-                        y += math.floor(height * ratio)
+                        small_h = math.floor(height*ratio)
+                        r.append(((x, y, width, small_h), i.colour))
+                        r += i.generate_treemap((x, y, width, small_h))
+                        y += small_h
             return r
 
     def get_separator(self):
@@ -238,6 +236,15 @@ class AbstractTree:
             for s in self._subtrees:
                 s.delete_item(item)
 
+    def get_path(self):
+        """ format path for self and return it
+        @type self: AbstractTree
+        @rtype: list[str]
+        """
+        if self._parent_tree is None:
+            return [self._root]
+        else:
+            return self._parent_tree.get_path() + [self._root]
 
 class FileSystemTree(AbstractTree):
     """A tree representation of files and folders in a file system.
