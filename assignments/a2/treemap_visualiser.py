@@ -15,7 +15,7 @@ to them.
 import pygame
 from tree_data import FileSystemTree
 from population import PopulationTree
-
+import math
 
 # Screen dimensions and coordinates
 ORIGIN = (0, 0)
@@ -62,13 +62,7 @@ def render_display(screen, tree, text):
                      (0, 0, WIDTH, HEIGHT))
     treemap = tree.generate_treemap((0, 0, WIDTH, TREEMAP_HEIGHT))
     for i in treemap:
-        if i == treemap[-1]:  # Treatment of the very last block
-            x, y, width, height = i[0]
-            width += WIDTH - (x+width)
-            height += HEIGHT - (y + height + FONT_HEIGHT)
-            pygame.draw.rect(screen, i[1], (x, y, width, height))
-        else:
-            pygame.draw.rect(screen, i[1], i[0])
+        pygame.draw.rect(screen, i[1], i[0])
     _render_text(screen, text)
     # This must be called *after* all other pygame functions have run.
     pygame.display.flip()
@@ -138,6 +132,21 @@ def event_loop(screen, tree):
                     tree.delete_item(deleting)
                     render_display(screen, tree, '')
 
+        if event.type == pygame.KEYUP:
+            if selected_leaf != []:
+                changed_size = math.ceil(selected_leaf[0].data_size/100)
+                if event.key == pygame.K_UP:
+                    selected_leaf[0].data_size += changed_size
+                    selected_leaf[0].re_calculate_size(changed_size)
+
+                elif event.key == pygame.K_DOWN:
+                    selected_leaf[0].data_size -= changed_size
+                    selected_leaf[0].re_calculate_size(-changed_size)
+
+            render_display(screen, tree, tree.get_separator().
+                           join(selected_leaf[0].get_path()) + ' (' +
+                           str(selected_leaf[0].data_size) + ')')
+
 
 def run_treemap_file_system(path):
     """Run a treemap visualisation for the given path's file structure.
@@ -169,9 +178,9 @@ if __name__ == '__main__':
     # call, with the '' replaced by a path like
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
-    macdr = '/Users/PeijunsMac/Desktop/csc148'
-    windr = 'A:/Python Projects/csc148/assignments'
-    run_treemap_file_system(windr)
+    _macdr = '/Users/PeijunsMac/Desktop/csc148'
+    _windr = 'A:/Python Projects/csc148/assignments'
+    run_treemap_file_system(_windr)
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()

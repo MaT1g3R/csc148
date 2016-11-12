@@ -144,25 +144,22 @@ class AbstractTree:
         # coordinates of a rectangle, as follows.
         # x, y, width, height = rect
         if self.is_empty():
-            return []
-        elif self._subtrees == [] and self.data_size > 0:
+            pass
+        elif self._subtrees == []:
             return [(rect, self.colour)]
         else:
             r = []
             x, y, width, height = rect
-            for i in self._subtrees:
-                if i.data_size > 0:  # empty folders are ignored
-                    ratio = i.data_size/self.data_size
-
+            for i in range(len(self._subtrees)):
+                if self._subtrees[i].data_size > 0:  # empty folders are ignored
+                    ratio = self._subtrees[i].data_size/self.data_size
                     if width > height:
                         small_w = math.floor(width*ratio)
-                        r.append(((x, y, small_w, height), i.colour))
-                        r += i.generate_treemap((x, y, small_w, height))
+                        r += self._subtrees[i].generate_treemap((x, y, small_w, height))
                         x += small_w
                     else:
-                        small_h = math.floor(height*ratio)
-                        r.append(((x, y, width, small_h), i.colour))
-                        r += i.generate_treemap((x, y, width, small_h))
+                        small_h = math.floor(height * ratio)
+                        r += self._subtrees[i].generate_treemap((x, y, width, small_h))
                         y += small_h
             return r
 
@@ -219,10 +216,8 @@ class AbstractTree:
         @type change: int
         @rtype: None
         """
-        if self._parent_tree is None:
-            self.data_size += change
-        else:
-            self.data_size += change
+        self.data_size += change
+        if self._parent_tree is not None:
             self._parent_tree.re_calculate_size(change)
 
     def delete_item(self, item):
@@ -297,13 +292,13 @@ if __name__ == '__main__':
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_all(config='pylintrc.txt')
 
-    macdr = '/Users/PeijunsMac/Desktop/csc148/assignments'
-    windr = 'A:/Python Projects/csc148/assignments'
-    common = 'a2/tree_data.py'
+    mac_dir = '/Users/PeijunsMac/Desktop/csc148/assignments'
+    _windr = 'A:/Python Projects/csc148/assignments'
+    _common = 'a2/tree_data.py'
 
-    tree = FileSystemTree(os.path.join(windr, common))
+    tree = FileSystemTree(os.path.join(_windr, _common))
     print(tree.data_size)
 
-    tree2 = FileSystemTree(windr)
+    tree2 = FileSystemTree(_windr)
     print(tree2.to_nested_list())
     # print(tree2.generate_treemap())
