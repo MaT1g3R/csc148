@@ -87,6 +87,13 @@ class PopulationTree(AbstractTree):
                 subtrees = []
             AbstractTree.__init__(self, root, subtrees, data_size)
 
+    def get_separator(self):
+        """ Use </> to indicate the path for the file tree
+        @type self: FileSystemTree
+        @rtype: str
+        """
+        return '->'
+
 
 def _load_data():
     """Create a list of trees corresponding to different world regions.
@@ -100,7 +107,6 @@ def _load_data():
     country_populations = _get_population_data()
     regions = _get_region_data()
 
-    # TODO: create PopulationTree objects for each country and region.
     # Be sure to read the docstring of the PopulationTree constructor to see
     # how to call it.
     # You'll want to complete the two helpers called above first (otherwise
@@ -109,6 +115,14 @@ def _load_data():
     # Remember that each region tree has only two levels:
     #   - a root storing the name of the region
     #   - zero or more leaves, each representing a country in the region
+    r = []
+    for region in regions:
+        sub_trees = []
+        for country in regions[region]:
+            sub_trees.append(PopulationTree(False, country, [],
+                                            int(country_populations[country])))
+        r += [PopulationTree(False, region, sub_trees)]
+    return r
 
 
 def _get_population_data():
@@ -133,9 +147,10 @@ def _get_population_data():
     # pause the program and use the debugger to inspect the contents of
     # population_data.
     countries = {}
-
-    # TODO: Complete this function.
-
+    for i in population_data:
+        if i['value'] is not None:
+            if isinstance(int(i['value']), int):
+                countries[i['country']['value']] = i['value']
     return countries
 
 
@@ -155,9 +170,19 @@ def _get_region_data():
     # The following line is a good place to put a breakpoint to help inspect
     # the contents of country_data.
     regions = {}
+    # Get all country names from pop_data
+    countries = []
+    for i in _get_population_data():
+        countries.append(i)
 
-    # TODO: Complete this function.
-
+    for i in range(len(country_data)):
+        if country_data[i]['name'] in countries:
+            if country_data[i]['region']['value'] not in regions:
+                regions[country_data[i]['region']['value']] = \
+                    [country_data[i]['name']]
+            else:
+                regions[country_data[i]['region']['value']] += \
+                    [country_data[i]['name']]
     return regions
 
 
@@ -176,4 +201,4 @@ def _get_json_data(url):
 if __name__ == '__main__':
     import python_ta
     # Remember to change this to check_all when cleaning up your code.
-    python_ta.check_errors(config='pylintrc.txt')
+    python_ta.check_all(config='pylintrc.txt')

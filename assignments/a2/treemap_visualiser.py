@@ -12,10 +12,10 @@ concrete subclass, of course), rendering it to the user using pygame,
 and detecting user events like mouse clicks and key presses and responding
 to them.
 """
+import math
 import pygame
 from tree_data import FileSystemTree
 from population import PopulationTree
-import math
 
 # Screen dimensions and coordinates
 ORIGIN = (0, 0)
@@ -106,44 +106,67 @@ def event_loop(screen, tree):
         event = pygame.event.poll()
         if event.type == pygame.QUIT:
             return
-        # Remember to call render_display if any data_sizes change,
-        # as the treemap will change in this case.
+        # Mouse events
         if event.type == pygame.MOUSEBUTTONUP:
             pos = event.pos
             current_color = screen.get_at(pos)[:3]
-            if event.button == 1:  # left click
-                if selected_leaf == []:
-                    selected_leaf.append(tree.get_item_by_color(current_color))
-                elif selected_leaf[0] == tree.get_item_by_color(current_color):
-                    selected_leaf.clear()
-                else:
-                    selected_leaf.clear()
-                    selected_leaf.append(tree.get_item_by_color(current_color))
-                if selected_leaf != [] and selected_leaf != [None]:
-                    render_display(screen, tree, selected_leaf[0].get_path_size())
-                else:
-                    render_display(screen, tree, '')
-
-            elif event.button == 3:  # right click
-                if selected_leaf != []:
-                    if tree.get_item_by_color(current_color) \
-                            == selected_leaf[0]:
-                        selected_leaf.clear()
-                deleting = tree.get_item_by_color(current_color)
-                if deleting is not None:
-                    deleted_size = -deleting.data_size
-                    deleting.re_calculate_size(deleted_size)
-                    tree.delete_item(deleting)
-                    render_display(screen, tree, '')
-
+            _mouse_event(selected_leaf, event, tree, current_color)
+        # Keyboard events
         if event.type == pygame.KEYUP:
-            if selected_leaf != []:
-                changed_size = math.ceil(selected_leaf[0].data_size/100)
-                if event.key == pygame.K_UP:
-                    selected_leaf[0].re_calculate_size(changed_size)
-                elif event.key == pygame.K_DOWN:
-                    selected_leaf[0].re_calculate_size(-changed_size)
-            render_display(screen, tree, selected_leaf[0].get_path_size())
+            _keyboard_event(selected_leaf, event)
+
+        # rendering event with path
+        if selected_leaf != [] and selected_leaf != [None]:
+            render_display(screen, tree,
+                           selected_leaf[0].get_path_size())
+        # rendering empty
+        else:
+            render_display(screen, tree, '')
+
+
+def _mouse_event(selected_leaf, event, tree, current_color):
+    """ helper to process mouse events
+    @type selected_leaf: list[FileSystemTree | PopulationTree]
+    @type event: pygame.event
+    @type tree: FileSystemTree | PopulationTree
+    @type current_color: (int, int, int)
+    @rtype: None
+    """
+    if event.button == 1:  # left click
+        # nothing is selected
+        if selected_leaf == []:
+            selected_leaf.append(tree.get_item_by_color(current_color))
+        # Deselect event
+        elif selected_leaf[0] == tree.get_item_by_color(current_color):
+            selected_leaf.clear()
+        # General
+        else:
+            selected_leaf.clear()
+            selected_leaf.append(tree.get_item_by_color(current_color))
+    elif event.button == 3:  # right click
+        deleting = tree.get_item_by_color(current_color)
+        # clear selected if deleted == selected
+        if selected_leaf != []:
+            if deleting == selected_leaf[0]:
+                selected_leaf.clear()
+        if deleting is not None:
+            deleted_size = -deleting.data_size
+            deleting.re_calculate_size(deleted_size)
+            tree.delete_item(deleting)
+
+
+def _keyboard_event(selected_leaf, event):
+    """ helper to process mouse events
+    @type selected_leaf: list[FileSystemTree | PopulationTree]
+    @type event: pygame.event
+    @rtype: None
+    """
+    if selected_leaf != []:
+        changed_size = math.ceil(selected_leaf[0].data_size / 100)
+        if event.key == pygame.K_UP:
+            selected_leaf[0].re_calculate_size(changed_size)
+        elif event.key == pygame.K_DOWN:
+            selected_leaf[0].re_calculate_size(-changed_size)
 
 
 def run_treemap_file_system(path):
@@ -170,15 +193,15 @@ def run_treemap_population():
 if __name__ == '__main__':
     import python_ta
     # Remember to change this to check_all when cleaning up your code.
-    python_ta.check_errors(config='pylintrc.txt')
+    python_ta.check_all(config='pylintrc.txt')
 
     # To check your work for Tasks 1-4, try uncommenting the following function
     # call, with the '' replaced by a path like
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
-    _macdr = '/Users/PeijunsMac/Desktop/csc148'
-    _windr = 'A:/Python Projects/csc148 _backup'
-    run_treemap_file_system(_windr)
+    # _macdr = '/Users/PeijunsMac/Desktop/csc148'
+    # windows = 'A:/Python Projects/csc148 _backup'
+    # run_treemap_file_system(windows)
 
     # To check your work for Task 5, uncomment the following function call.
-    # run_treemap_population()
+    run_treemap_population()

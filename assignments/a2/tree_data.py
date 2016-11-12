@@ -159,24 +159,14 @@ class AbstractTree:
                         r += self._subtrees[i].generate_treemap(
                             (x, y, small_w, height))
                         x += small_w
-                        for sub_i in range(len(r)):
-                            a, b, c, d = r[sub_i][0]
-                            e = r[sub_i][1]
-                            c += width - a - c
-                            r[sub_i] = ((a, b, c, d), e)
+                        size_fixing_w(r, width)
+
                     else:
                         small_h = math.floor(height * ratio)
                         r += self._subtrees[i].generate_treemap(
                             (x, y, width, small_h))
                         y += small_h
-
-                        for sub_i in range(len(r)):
-
-                            a, b, c, d = r[sub_i][0]
-                            e = r[sub_i][1]
-                            d += height - b - d
-                            r[sub_i] = ((a, b, c, d), e)
-
+                        size_fixing_h(r, height)
             return r
 
     def get_separator(self):
@@ -313,18 +303,43 @@ class FileSystemTree(AbstractTree):
         return '/'
 
 
+def size_fixing_h(r, height):
+    """size fixing helper for height
+    @type r: list[((int, int, int, int), (int, int, int))]
+    @type height: int
+    @rtype: None
+    """
+    for sub_i in range(len(r)):
+        a, b, c, d = r[sub_i][0]
+        e = r[sub_i][1]
+        d += height - b - d
+        r[sub_i] = ((a, b, c, d), e)
+
+
+def size_fixing_w(r, width):
+    """size fixing helper for height
+    @type r: list[((int, int, int, int), (int, int, int))]
+    @type width: int
+    @rtype: None
+    """
+    for sub_i in range(len(r)):
+        a, b, c, d = r[sub_i][0]
+        e = r[sub_i][1]
+        c += width - a - c
+        r[sub_i] = ((a, b, c, d), e)
+
 if __name__ == '__main__':
     import python_ta
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_all(config='pylintrc.txt')
 
-    mac_dir = '/Users/PeijunsMac/Desktop/csc148/assignments'
-    _windr = 'A:/Python Projects/csc148/assignments'
-    _common = 'a2/tree_data.py'
-
-    tree = FileSystemTree(os.path.join(_windr, _common))
-    print(tree.data_size)
-
-    tree2 = FileSystemTree(_windr)
-    print(tree2.to_nested_list())
-    # print(tree2.generate_treemap())
+    # mac_dir = '/Users/PeijunsMac/Desktop/csc148/assignments'
+    # _windr = 'A:/Python Projects/csc148/assignments'
+    # _common = 'a2/tree_data.py'
+    #
+    # tree = FileSystemTree(os.path.join(_windr, _common))
+    # print(tree.data_size)
+    #
+    # tree2 = FileSystemTree(_windr)
+    # print(tree2.to_nested_list())
+    # # print(tree2.generate_treemap())
