@@ -200,7 +200,8 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     # _macdr = '/Users/PeijunsMac/Desktop/csc148'
-    run_treemap_file_system('A:/Python Projects/csc148 _backup')
+    # run_treemap_file_system('A:/Python Projects/csc148 _backup')
+    # run_treemap_file_system('/Users/PeijunsMac/Desktop/mkv')
 
     # To check your work for Task 5, uncomment the following function call.
-    # run_treemap_population()
+    run_treemap_population()
