@@ -221,6 +221,8 @@ class BinarySearchTree:
         """
         if self.is_empty():
             self._root = item
+            self._left = BinarySearchTree(None)
+            self._right = BinarySearchTree(None)
         elif item <= self._root:
             self._left.insert(item)
         else:
