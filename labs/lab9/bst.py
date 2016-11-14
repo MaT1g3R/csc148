@@ -263,11 +263,13 @@ class BinarySearchTree:
               5
               11
         """
-
-        pivit = self._left
-        self._left = pivit._right
-        pivit._right = self
-
+        root = BinarySearchTree(None)
+        root._root, root._left, root._right = self._root, self._left, self._right
+        pivot = root._left
+        root._left = pivot._right
+        pivot._right = root
+        root = pivot
+        self._root, self._left, self._right = root._root, root._left, root._right
 
     def rotate_left(self):
         """Rotate the BST counter-clockwise, i.e. make the right subtree the root.
@@ -311,8 +313,13 @@ class BinarySearchTree:
                 5
               9
         """
-        # TODO: implement this method!
-        pass
+        root = BinarySearchTree(None)
+        root._root, root._left, root._right = self._root, self._left, self._right
+        pivot = root._right
+        root._right = pivot._left
+        pivot._left = root
+        root = pivot
+        self._root, self._left, self._right = root._root, root._left, root._right
 
     # ------------------------------------------------------------------------
     # Implementation of deletion - we'll cover this on Friday
@@ -391,8 +398,7 @@ class BinarySearchTree:
             temp = self._root
             # Copy left subtree to self, because root node is removed.
             # Note that self = self._left does NOT work!
-            self._root, self._left, self._right =\
-                self._left._root, self._left._left, self._left._right
+            self.delete_root()
             return temp
         else:
             return self._right.extract_max()
