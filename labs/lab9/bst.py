@@ -413,8 +413,7 @@ class BinarySearchTree:
         """
         if self._left.is_empty():
             temp = self._root
-            self._root, self._left, self._right =\
-                self._right._root, self._right._left, self._right._right
+            self.delete_root()
             return temp
         else:
             return self._left.extract_min()
