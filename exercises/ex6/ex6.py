@@ -137,7 +137,7 @@ class BinarySearchTree:
             return self._left.items_at_depth(d-1) +\
                    self._right.items_at_depth(d-1)
 
-    def levels(self):
+    def levels(self, lvl=1):
         """Return a list of items in the tree, separated by level.
 
         You may wish to use 'items_at_depth' as a helper method,
@@ -145,13 +145,6 @@ class BinarySearchTree:
         this method twice, once with 'items_at_depth', and once
         without it!
 
-        @type self: BinarySearchTree
-        @rtype: list[(int, list)]
-        """
-        return self._lvl_helper()
-
-    def _lvl_helper(self, lvl=1):
-        """
         @type self: BinarySearchTree
         @type lvl: int
         @rtype: list[(int, list)]
@@ -161,7 +154,7 @@ class BinarySearchTree:
         else:
             r = [(lvl, self.items_at_depth(lvl))]
             if self.items_at_depth(lvl+1) != []:
-                r += self._lvl_helper(lvl+1)
+                r += self.levels(lvl+1)
             return r
 
 if __name__ == '__main__':
