@@ -107,6 +107,43 @@ def kth_smallest(bst, k):
     >>> bst._right = right
     >>> bst.items()
     [2, 3, 5, 7, 9, 11, 13]
-    >>> kth_smallest(bst, 6)
+    >>> kth_smallest(bst, 1)
+    2
+    >>> kth_smallest(bst, 2)
+    3
+    >>> kth_smallest(bst, 3)
+    5
+    >>> kth_smallest(bst, 4)
+    7
+    >>> kth_smallest(bst, 5)
     9
+    >>> kth_smallest(bst, 6)
+    11
+    >>> kth_smallest(bst, 7)
+    13
+    """
+    if k == size(bst._left) + 1:
+        return bst._root
+    elif k < size(bst._left) + 1:
+        return kth_smallest(bst._left, k)
+    else:
+        k = k - 1 - size(bst._left)
+        return kth_smallest(bst._right, k)
+
+
+def pre_loop(bst):
+    """
+    print pre order with loop
+    @type bst: BinarySearchTree
+    @rtype: list
+    >>> bst = BinarySearchTree(7)
+    >>> left = BinarySearchTree(3)
+    >>> left._left = BinarySearchTree(2)
+    >>> left._right = BinarySearchTree(5)
+    >>> right = BinarySearchTree(11)
+    >>> right._left = BinarySearchTree(9)
+    >>> right._right = BinarySearchTree(13)
+    >>> bst._left = left
+    >>> bst._right = right
+    >>> pre_loop(bst)
     """

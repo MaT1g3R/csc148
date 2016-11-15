@@ -10,6 +10,7 @@ This module contains a few BinarySearchTree methods that you should implement
 recursively. Make sure you understand the *BST Property*; it will play an
 important role in several of these methods.
 """
+from random import shuffle
 
 
 class BinarySearchTree:
@@ -221,6 +222,8 @@ class BinarySearchTree:
         """
         if self.is_empty():
             self._root = item
+            self._left = BinarySearchTree(None)
+            self._right = BinarySearchTree(None)
         elif item <= self._root:
             self._left.insert(item)
         else:
@@ -418,6 +421,24 @@ class BinarySearchTree:
         else:
             return self._left.extract_min()
 
+
+def random_bst(i):
+    """
+    generate a radom BST with i items
+    @type i: int
+    @rtype: BinarySearchTree
+    """
+    nums = []
+    for num in range(i*2):
+        nums.append(num)
+
+    shuffle(nums)
+    picked = nums[:i]
+    root = picked.pop(-1)
+    r = BinarySearchTree(root)
+    for n in picked:
+        r.insert(n)
+    return r
 
 if __name__ == '__main__':
     import python_ta
