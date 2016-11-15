@@ -140,11 +140,10 @@ def pre_loop(bst):
     >>> bst.print_bst()
     >>> pre_loop(bst)
     """
-    # Base CAse
     if bst.is_empty():
         pass
     s = [bst]
-    while len(s) > 0:
+    while s != []:
 
         node = s.pop()
         print(node._root)
