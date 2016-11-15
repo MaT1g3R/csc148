@@ -229,93 +229,6 @@ class BinarySearchTree:
             self._right.insert(item)
 
     # ------------------------------------------------------------------------
-    # Lab 9 Task 3
-    # ------------------------------------------------------------------------
-    def rotate_right(self):
-        """Rotate the BST clockwise, i.e. make the left subtree the root.
-
-        @type self: BinarySearchTree
-        @rtype: object
-
-        >>> bst = BinarySearchTree(7)
-        >>> left = BinarySearchTree(3)
-        >>> right = BinarySearchTree(11)
-        >>> left._left = BinarySearchTree(2)
-        >>> left._right = BinarySearchTree(5)
-        >>> bst._left = left
-        >>> bst._right = right
-        >>> bst.print_bst()
-        7
-          3
-            2
-            5
-          11
-        >>> bst.rotate_right()
-        >>> bst.print_bst()
-        3
-          2
-          7
-            5
-            11
-        >>> bst.rotate_right()
-        >>> bst.print_bst()
-        2
-          3
-            7
-              5
-              11
-        """
-
-        pivit = self._left
-        self._left = pivit._right
-        pivit._right = self
-
-    def rotate_left(self):
-        """Rotate the BST counter-clockwise, i.e. make the right subtree the root.
-
-        @type self: BinarySearchTree
-        @rtype: object
-
-        >>> bst = BinarySearchTree(7)
-        >>> left = BinarySearchTree(3)
-        >>> left._left = BinarySearchTree(2)
-        >>> left._right = BinarySearchTree(5)
-        >>> right = BinarySearchTree(11)
-        >>> right._left = BinarySearchTree(9)
-        >>> right._right = BinarySearchTree(13)
-        >>> bst._left = left
-        >>> bst._right = right
-        >>> bst.print_bst()
-        7
-          3
-            2
-            5
-          11
-            9
-            13
-        >>> bst.rotate_left()
-        >>> bst.print_bst()
-        11
-          7
-            3
-              2
-              5
-            9
-          13
-        >>> bst.rotate_left()
-        >>> bst.print_bst()
-        13
-          11
-            7
-              3
-                2
-                5
-              9
-        """
-        # TODO: implement this method!
-        pass
-
-    # ------------------------------------------------------------------------
     # Implementation of deletion - we'll cover this on Friday
     # ------------------------------------------------------------------------
     def delete(self, item):
@@ -392,8 +305,7 @@ class BinarySearchTree:
             temp = self._root
             # Copy left subtree to self, because root node is removed.
             # Note that self = self._left does NOT work!
-            self._root, self._left, self._right =\
-                self._left._root, self._left._left, self._left._right
+            self.delete_root()
             return temp
         else:
             return self._right.extract_max()
@@ -408,8 +320,7 @@ class BinarySearchTree:
         """
         if self._left.is_empty():
             temp = self._root
-            self._root, self._left, self._right =\
-                self._right._root, self._right._left, self._right._right
+            self.delete_root()
             return temp
         else:
             return self._left.extract_min()
