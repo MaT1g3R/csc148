@@ -1,6 +1,6 @@
 from rec_linked_list import LinkedListRec
 from tree import Tree
-from week9 import BinarySearchTree
+from bst import BinarySearchTree, random_bst
 
 def filter_pos_rec(lst):
     """
@@ -136,14 +136,22 @@ def pre_loop(bst):
     print pre order with loop
     @type bst: BinarySearchTree
     @rtype: list
-    >>> bst = BinarySearchTree(7)
-    >>> left = BinarySearchTree(3)
-    >>> left._left = BinarySearchTree(2)
-    >>> left._right = BinarySearchTree(5)
-    >>> right = BinarySearchTree(11)
-    >>> right._left = BinarySearchTree(9)
-    >>> right._right = BinarySearchTree(13)
-    >>> bst._left = left
-    >>> bst._right = right
+    >>> bst = random_bst(10)
+    >>> bst.print_bst()
     >>> pre_loop(bst)
     """
+    if bst.is_empty():
+        pass
+
+    nodestack = list()
+    nodestack.append(bst)
+    r = []
+    while len(nodestack) > 0:
+        node = nodestack.pop()
+        r.append(node._root)
+
+        if not node._right.is_empty():
+            nodestack.append(node._right)
+        if not node._left.is_empty():
+            nodestack.append(node._left)
+    return r
