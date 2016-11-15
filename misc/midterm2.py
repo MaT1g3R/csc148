@@ -107,6 +107,6 @@ def kth_smallest(bst, k):
     >>> bst._right = right
     >>> bst.items()
     [2, 3, 5, 7, 9, 11, 13]
-    >>> kth_smallest(bst, 5)
+    >>> kth_smallest(bst, 6)
     9
     """
