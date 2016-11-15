@@ -136,22 +136,20 @@ def pre_loop(bst):
     print pre order with loop
     @type bst: BinarySearchTree
     @rtype: list
-    >>> bst = random_bst(10)
+    >>> bst = random_bst(5)
     >>> bst.print_bst()
     >>> pre_loop(bst)
     """
+    # Base CAse
     if bst.is_empty():
         pass
+    s = [bst]
+    while len(s) > 0:
 
-    nodestack = list()
-    nodestack.append(bst)
-    r = []
-    while len(nodestack) > 0:
-        node = nodestack.pop()
-        r.append(node._root)
+        node = s.pop()
+        print(node._root)
 
         if not node._right.is_empty():
-            nodestack.append(node._right)
+            s.append(node._right)
         if not node._left.is_empty():
-            nodestack.append(node._left)
-    return r
+            s.append(node._left)
