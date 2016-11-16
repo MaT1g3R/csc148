@@ -133,7 +133,7 @@ def kth_smallest(bst, k):
 
 def pre_loop(bst):
     """
-    print pre order with loop
+    return pre order with loop
     @type bst: BinarySearchTree
     @rtype: list
     >>> bst = random_bst(5)
@@ -143,12 +143,42 @@ def pre_loop(bst):
     if bst.is_empty():
         pass
     s = [bst]
+    r = []
     while s != []:
 
         node = s.pop()
-        print(node._root)
+        r.append(node._root)
 
         if not node._right.is_empty():
             s.append(node._right)
         if not node._left.is_empty():
             s.append(node._left)
+    return r
+
+
+def in_loop(bst):
+    """
+    return in order with loop
+    @type bst: BinarySearchTree
+    @rtype: list
+    >>> bst = random_bst(5)
+    >>> bst.print_bst()
+    >>> in_loop(bst)
+    """
+    current = bst
+    s = []
+    r = []
+    done = False
+    while (not done):
+        if current is not None:
+            s.append(current)
+            current = current._left
+        else:
+            if (len(s) > 0):
+                current = s.pop()
+                if not current.is_empty():
+                    r.append(current._root)
+                current = current._right
+            else:
+                done = True
+    return r
