@@ -1,6 +1,6 @@
 from rec_linked_list import LinkedListRec
 from tree import Tree
-from week9 import BinarySearchTree
+from bst import BinarySearchTree, random_bst
 
 def filter_pos_rec(lst):
     """
@@ -107,6 +107,78 @@ def kth_smallest(bst, k):
     >>> bst._right = right
     >>> bst.items()
     [2, 3, 5, 7, 9, 11, 13]
-    >>> kth_smallest(bst, 6)
+    >>> kth_smallest(bst, 1)
+    2
+    >>> kth_smallest(bst, 2)
+    3
+    >>> kth_smallest(bst, 3)
+    5
+    >>> kth_smallest(bst, 4)
+    7
+    >>> kth_smallest(bst, 5)
     9
+    >>> kth_smallest(bst, 6)
+    11
+    >>> kth_smallest(bst, 7)
+    13
     """
+    if k == size(bst._left) + 1:
+        return bst._root
+    elif k < size(bst._left) + 1:
+        return kth_smallest(bst._left, k)
+    else:
+        k = k - 1 - size(bst._left)
+        return kth_smallest(bst._right, k)
+
+
+def pre_loop(bst):
+    """
+    return pre order with loop
+    @type bst: BinarySearchTree
+    @rtype: list
+    >>> bst = random_bst(5)
+    >>> bst.print_bst()
+    >>> pre_loop(bst)
+    """
+    if bst.is_empty():
+        pass
+    s = [bst]
+    r = []
+    while s != []:
+
+        node = s.pop()
+        r.append(node._root)
+
+        if not node._right.is_empty():
+            s.append(node._right)
+        if not node._left.is_empty():
+            s.append(node._left)
+    return r
+
+
+def in_loop(bst):
+    """
+    return in order with loop
+    @type bst: BinarySearchTree
+    @rtype: list
+    >>> bst = random_bst(5)
+    >>> bst.print_bst()
+    >>> in_loop(bst)
+    """
+    current = bst
+    s = []
+    r = []
+    done = False
+    while (not done):
+        if current is not None:
+            s.append(current)
+            current = current._left
+        else:
+            if (len(s) > 0):
+                current = s.pop()
+                if not current.is_empty():
+                    r.append(current._root)
+                current = current._right
+            else:
+                done = True
+    return r
