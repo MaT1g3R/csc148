@@ -98,7 +98,6 @@ def anagrams(phrase):
     @type phrase: str
     @rtype: list[str]
     """
-    # TODO: use the debugger to inspect the contents of the following two
     # variables. This is particularly useful to see how the letter frequencies
     # are being represented.
     words = _generate_word_list()
@@ -162,22 +161,17 @@ def _anagrams_helper(words, letter_count):
 
     # 1. Base case - no more letters in <letter_count>.
     # In this case, there is only one valid anagram: the empty string.
-    sum = 0
-    for char in LETTERS:
-        sum += letter_count[char]
-    if sum == 0:
+    if sum(letter_count.values()) == 0:
         return ['']
-    i = -1
+
     for word in words:
         # 2. For each word, check whether it can be used with the given
         # letter count. (If not, go onto the next word.)
-        i += 1
 
         if not _within_letter_count(word, letter_count):
             continue
 
         # 3. If the word can be used, recurse and create anagrams.
-        # TODO: For this part, you'll need to do three things:
         #  (i) Create a new dictionary that has the same values as letter_count,
         #      except with counts decreased based on the letters in <word>.
         #      Look at how we implemented _generate_letter_count for guidance.
@@ -186,9 +180,38 @@ def _anagrams_helper(words, letter_count):
         #  (iii) Combine <word> with the result of the recursive call to update
         #        <anagrams_list> with the anagrams that start with <word>.
         #        Don't forget to separate the words with a space.
+        new = {}
+        for char in LETTERS:
+            new[char] = letter_count[char] - word.count(char)
+        r = _anagrams_helper(words, new)
+        if r != []:
+            tmp = [word] + r
+            tmp_str = ' '.join(tmp)
+            if tmp_str[-1] == ' ':
+                tmp_str = tmp_str[:len(tmp_str)-1]
+            anagrams_list.append(tmp_str)
 
     # 4. Return the anagrams that can be made by the letters in letter_count.
     return anagrams_list
+
+
+def flatten(lst):
+    """Return a list containing all the str in <lst>.
+
+    <lst> is a nested list, but the returned list should not be nested.
+    The items should appear in the output in the left-to-right order they
+    appear in <lst>.
+
+    @type lst: str | list
+    @rtype: list[str]
+    """
+    if isinstance(lst, str):
+        return [lst]
+    else:
+        result = []
+        for lst_i in lst:
+            result += flatten(lst_i)
+        return result
 
 
 def _within_letter_count(word, letter_count):
