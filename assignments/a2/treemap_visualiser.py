@@ -19,8 +19,8 @@ from population import PopulationTree
 
 # Screen dimensions and coordinates
 ORIGIN = (0, 0)
-WIDTH = 1920
-HEIGHT = 1050
+WIDTH = 1240
+HEIGHT = 720
 FONT_HEIGHT = 30                       # The height of the text display.
 TREEMAP_HEIGHT = HEIGHT - FONT_HEIGHT  # The height of the treemap display.
 
