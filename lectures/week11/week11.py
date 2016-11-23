@@ -3,11 +3,14 @@ def mergesort(lst):
     This is a non-mutating version
     @type lst: list
     @rtype: list
+    >>> lst =[4,5,7,1,3,8]
+    >>> mergesort(lst)
+    [1, 3, 4, 5, 7, 8]
     """
     if lst == []:
         return []
     elif len(lst) == 1:
-        return [lst[0]]
+        return lst[:]
     else:
         mid = len(lst)//2  # // rounds down
         # divide the list into two halves
@@ -30,7 +33,22 @@ def merge(lst1, lst2):
     @type lst2: list
     @rtype: list
     """
-    pass
+    if lst1 == lst2 == []:
+        return []
+    else:
+        r = []
+        while lst1 != [] and lst2 != []:
+            if lst1[0] < lst2[0]:
+                r.append(lst1.pop(0))
+            else:
+                r.append(lst2.pop(0))
+
+        if lst1 == []:
+            r += lst2
+        elif lst2 == []:
+            r += lst1
+
+        return r
 
 
 def quicksort(lst):
