@@ -13,7 +13,6 @@ This file contains starter code for Exercise 7.
 ##############################################################################
 # Task 1: A variation on sorting
 ##############################################################################
-# TODO: Implement this function
 def kth_smallest(lst, k):
     """Return the <k>-th smallest element in <lst>.
 
