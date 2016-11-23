@@ -41,6 +41,8 @@ def kth_smallest(lst, k):
     # smaller, bigger = partition(...)
     # Check the length of <smaller>, and use that to figure out which list
     # to recurse on. You only need to recurse on one!
+    if lst == []:
+        pass
     pivot = lst[0]
     smaller, bigger = partition(lst, pivot)
 
@@ -184,7 +186,6 @@ def _anagrams_helper(words, letter_count):
         #  (iii) Combine <word> with the result of the recursive call to update
         #        <anagrams_list> with the anagrams that start with <word>.
         #        Don't forget to separate the words with a space.
-
 
     # 4. Return the anagrams that can be made by the letters in letter_count.
     return anagrams_list
