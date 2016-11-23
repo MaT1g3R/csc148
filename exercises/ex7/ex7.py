@@ -184,7 +184,9 @@ def _anagrams_helper(words, letter_count):
         for char in LETTERS:
             new[char] = letter_count[char] - word.count(char)
         r = _anagrams_helper(words, new)
-        if r != []:
+        if r == []:
+            pass
+        else:
             tmp = [word] + r
             tmp_str = ' '.join(tmp)
             if tmp_str[-1] == ' ':
