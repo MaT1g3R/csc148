@@ -51,7 +51,8 @@ def kth_smallest(lst, k):
     elif k > len(smaller) - 1:
         return kth_smallest(bigger, k - len(smaller))
     else:
-        return kth_smallest(smaller[1:], k)
+        smaller.remove(pivot)
+        return kth_smallest(smaller, k)
 
 
 def partition(lst, pivot):

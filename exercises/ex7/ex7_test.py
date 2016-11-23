@@ -24,21 +24,21 @@ from hypothesis import given
 from hypothesis.strategies import integers, lists
 
 
-# class KthSmallestTest(unittest.TestCase):
-#
-#     def test_sorted(self):
-#         sorted_list = list(range(0, 1000, 10))
-#         for i in range(100):
-#             self.assertEqual(kth_smallest(sorted_list, i), i * 10)
-#
-#     def test_empty(self):
-#         self.assertRaises(IndexError, kth_smallest, [], 0)
-#
-#     @given(lists(integers(), min_size=1, unique=True))
-#     @given(integers(min_value=0, max_value=10000))
-#     def test_correct_given_valid_k(self, lst, index):
-#         k = index % len(lst)
-#         self.assertEqual(kth_smallest(lst, k), sorted(lst)[k])
+class KthSmallestTest(unittest.TestCase):
+
+    def test_sorted(self):
+        sorted_list = list(range(0, 1000, 10))
+        for i in range(100):
+            self.assertEqual(kth_smallest(sorted_list, i), i * 10)
+
+    def test_empty(self):
+        self.assertRaises(IndexError, kth_smallest, [], 0)
+
+    @given(lists(integers(), min_size=1, unique=True))
+    @given(integers(min_value=0, max_value=10000))
+    def test_correct_given_valid_k(self, lst, index):
+        k = index % len(lst)
+        self.assertEqual(kth_smallest(lst, k), sorted(lst)[k])
 
 
 class AnagramsTest(unittest.TestCase):
