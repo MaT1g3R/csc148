@@ -55,7 +55,6 @@ tree._left = s1
 tree._right = s2
 
 
-
 class BSTNumLessThanTest(unittest.TestCase):
     def test_one(self):
         bst = BinarySearchTree(1)
