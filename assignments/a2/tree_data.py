@@ -302,30 +302,30 @@ class FileSystemTree(AbstractTree):
         return '/'
 
 
-def size_fixing_h(r, height):
+def size_fixing_h(treemaps, passed_in_height):
     """size fixing helper for height
-    @type r: list[((int, int, int, int), (int, int, int))]
-    @type height: int
+    @type treemaps: list[((int, int, int, int), (int, int, int))]
+    @type passed_in_height: int
     @rtype: None
     """
-    for sub_i in range(len(r)):
-        a, b, c, d = r[sub_i][0]
-        e = r[sub_i][1]
-        d += height - b - d
-        r[sub_i] = ((a, b, c, d), e)
+    for index in range(len(treemaps)):
+        x, y, width, height = treemaps[index][0]
+        color = treemaps[index][1]
+        height += passed_in_height - y - height
+        treemaps[index] = ((x, y, width, height), color)
 
 
-def size_fixing_w(r, width):
+def size_fixing_w(treemaps, passed_in_width):
     """size fixing helper for height
-    @type r: list[((int, int, int, int), (int, int, int))]
-    @type width: int
+    @type treemaps: list[((int, int, int, int), (int, int, int))]
+    @type passed_in_width: int
     @rtype: None
     """
-    for sub_i in range(len(r)):
-        a, b, c, d = r[sub_i][0]
-        e = r[sub_i][1]
-        c += width - a - c
-        r[sub_i] = ((a, b, c, d), e)
+    for index in range(len(treemaps)):
+        x, y, width, height = treemaps[index][0]
+        color = treemaps[index][1]
+        width += passed_in_width - x - width
+        treemaps[index] = ((x, y, width, height), color)
 
 if __name__ == '__main__':
     import python_ta
