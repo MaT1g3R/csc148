@@ -137,37 +137,31 @@ class AbstractTree:
             Input is in the pygame format: (x, y, width, height)
         @rtype: list[((int, int, int, int), (int, int, int))]
         """
-        # Read the handout carefully to help get started identifying base cases,
-        # and the outline of a recursive step.
-        #
-        # Programming tip: use "tuple unpacking assignment" to easily extract
-        # coordinates of a rectangle, as follows.
-        # x, y, width, height = rect
         if self.is_empty():
             pass
         elif self._subtrees == []:
             x, y, width, height = rect
             return [((x, y, width, height), self.colour)]
         else:
-            r = []
+            treemaps = []
             x, y, width, height = rect
             for i in range(len(self._subtrees)):
                 if self._subtrees[i].data_size > 0:  # empty folders are ignored
                     ratio = self._subtrees[i].data_size/self.data_size
                     if width > height:
                         small_w = math.floor(width*ratio)
-                        r += self._subtrees[i].generate_treemap(
+                        treemaps += self._subtrees[i].generate_treemap(
                             (x, y, small_w, height))
                         x += small_w
-                        size_fixing_w(r, width)
+                        size_fixing_w(treemaps, width)
 
                     else:
                         small_h = math.floor(height * ratio)
-                        r += self._subtrees[i].generate_treemap(
+                        treemaps += self._subtrees[i].generate_treemap(
                             (x, y, width, small_h))
                         y += small_h
-                        size_fixing_h(r, height)
-            return r
+                        size_fixing_h(treemaps, height)
+            return treemaps
 
     def get_separator(self):
         """Return the string used to separate nodes in the string
@@ -184,19 +178,20 @@ class AbstractTree:
         """
         raise NotImplementedError
 
-    def to_nested_list(self):
-        """Return the nested list representation of this tree.
-
-        @type self: Tree
-        @rtype: list
-        """
-        if len(self._subtrees) == 0:
-            return [self._root]
-        else:
-            nested = [self._root]
-            for subtree in self._subtrees:
-                nested.append(subtree.to_nested_list())
-            return nested
+    # Debugging purposes only
+    # def to_nested_list(self):
+    #     """Return the nested list representation of this tree.
+    #
+    #     @type self: Tree
+    #     @rtype: list
+    #     """
+    #     if len(self._subtrees) == 0:
+    #         return [self._root]
+    #     else:
+    #         nested = [self._root]
+    #         for subtree in self._subtrees:
+    #             nested.append(subtree.to_nested_list())
+    #         return nested
 
     def get_item_by_color(self, color):
         """ return the item with the color <color>
@@ -218,8 +213,10 @@ class AbstractTree:
 
     def re_calculate_size(self, change):
         """ re calculate the size of everything
+        This method mutate tree sizes
         @type self: AbstractTree
         @type change: int
+            the change in size, can be positive or negative
         @rtype: None
         """
         if self._parent_tree is None:
@@ -232,6 +229,7 @@ class AbstractTree:
         """ delete item from the tree
         @type self: AbstractTree
         @type item: AbstractTree
+            item to be deleted
         @rtype: None
         """
         if self._parent_tree is None:
@@ -254,10 +252,11 @@ class AbstractTree:
         else:
             return self._parent_tree.get_path_helper() + [self._root]
 
-    def get_path_size(self):
+    def get_path_and_size(self):
         """ return the full path of item in a string
         @type self: AbstractTree
         @rtype: str
+            used to be displayed in the pygame window
         """
         return self.get_separator().join(self.get_path_helper()) +\
             ' ({})'.format(self.data_size)

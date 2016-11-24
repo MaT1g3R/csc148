@@ -118,7 +118,7 @@ def event_loop(screen, tree):
         # rendering event with path
         if selected_leaf != [] and selected_leaf != [None]:
             render_display(screen, tree,
-                           selected_leaf[0].get_path_size())
+                           selected_leaf[0].get_path_and_size())
         # rendering empty
         else:
             render_display(screen, tree, '')
