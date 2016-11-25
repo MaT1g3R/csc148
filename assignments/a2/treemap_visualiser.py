@@ -206,6 +206,6 @@ if __name__ == '__main__':
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()
-    import os
-    EXAMPLE_PATH = os.path.join('example-data', 'B')
-    run_treemap_file_system(EXAMPLE_PATH)
+    # import os
+    # EXAMPLE_PATH = os.path.join('example-data', 'B')
+    # run_treemap_file_system(EXAMPLE_PATH)
