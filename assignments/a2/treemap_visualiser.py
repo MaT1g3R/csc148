@@ -202,7 +202,10 @@ if __name__ == '__main__':
     # _macdr = '/Users/PeijunsMac/Desktop/csc148'
     # run_treemap_file_system('A:/Python Projects/csc148 _backup')
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/mkv')
-    run_treemap_file_system('/Users/PeijunsMac/Desktop/csc148/assignments')
+    # run_treemap_file_system('/Users/PeijunsMac/Desktop/csc148/assignments')
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()
+    import os
+    EXAMPLE_PATH = os.path.join('example-data', 'B')
+    run_treemap_file_system(EXAMPLE_PATH)
