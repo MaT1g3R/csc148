@@ -140,15 +140,18 @@ class AbstractTree:
         if self.is_empty():
             pass
         elif self._subtrees == []:
-            x, y, width, height = rect
-            return [((x, y, width, height), self.colour)]
+            return [(rect, self.colour)]
         else:
             treemaps = []
             x, y, width, height = rect
+            big_x = x
+            big_y = y
+
             for i in range(len(self._subtrees)):
                 if self._subtrees[i].data_size > 0:  # empty folders are ignored
                     ratio = self._subtrees[i].data_size/self.data_size
                     if width > height:
+
                         small_w = math.floor(width*ratio)
                         treemaps += self._subtrees[i].generate_treemap(
                             (x, y, small_w, height))
@@ -161,6 +164,7 @@ class AbstractTree:
                             (x, y, width, small_h))
                         y += small_h
                         size_fixing_h(treemaps, height)
+
             return treemaps
 
     def get_separator(self):
@@ -333,12 +337,12 @@ if __name__ == '__main__':
     python_ta.check_all(config='pylintrc.txt')
 
     # mac_dir = '/Users/PeijunsMac/Desktop/csc148/assignments'
-    # _windr = 'A:/Python Projects/csc148/assignments'
+    _windr = 'A:/Python Projects/csc148 _backup'
     # _common = 'a2/tree_data.py'
     #
-    # tree = FileSystemTree(os.path.join(_windr, _common))
+    tree = FileSystemTree(os.path.join(_windr))
     # print(tree.data_size)
     #
     # tree2 = FileSystemTree(_windr)
     # print(tree2.to_nested_list())
-    # # print(tree2.generate_treemap())
+    tree.generate_treemap((0, 0, 1024, 720))

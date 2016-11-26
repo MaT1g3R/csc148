@@ -19,7 +19,7 @@ from population import PopulationTree
 
 # Screen dimensions and coordinates
 ORIGIN = (0, 0)
-WIDTH = 1240
+WIDTH = 1024
 HEIGHT = 720
 FONT_HEIGHT = 30                       # The height of the text display.
 TREEMAP_HEIGHT = HEIGHT - FONT_HEIGHT  # The height of the treemap display.
@@ -62,7 +62,8 @@ def render_display(screen, tree, text):
                      (0, 0, WIDTH, HEIGHT))
     treemap = tree.generate_treemap((0, 0, WIDTH, TREEMAP_HEIGHT))
     for i in treemap:
-        pygame.draw.rect(screen, i[1], i[0])
+        pygame.Surface.fill(screen, i[1], i[0])
+        # pygame.draw.rect(screen, i[1], i[0])
     _render_text(screen, text)
     # This must be called *after* all other pygame functions have run.
     pygame.display.flip()
