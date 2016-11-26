@@ -180,40 +180,28 @@ def _anagrams_helper(words, letter_count):
         #  (iii) Combine <word> with the result of the recursive call to update
         #        <anagrams_list> with the anagrams that start with <word>.
         #        Don't forget to separate the words with a space.
-        new = {}
-        for char in LETTERS:
-            new[char] = letter_count[char] - word.count(char)
+        new = get_new_word_count(letter_count, word)
         r = _anagrams_helper(words, new)
-        if r == []:
-            pass
-        else:
-            tmp = [word] + r
-            tmp_str = ' '.join(tmp)
-            if tmp_str[-1] == ' ':
-                tmp_str = tmp_str[:len(tmp_str)-1]
-            anagrams_list.append(tmp_str)
+        for i in r:
+            anagrams_list.append(word + ' ' + i)
 
     # 4. Return the anagrams that can be made by the letters in letter_count.
+    for i in range(len(anagrams_list)):
+        if anagrams_list[i][-1] == ' ':
+            anagrams_list[i] = anagrams_list[i][:-1]
     return anagrams_list
 
 
-def flatten(lst):
-    """Return a list containing all the str in <lst>.
-
-    <lst> is a nested list, but the returned list should not be nested.
-    The items should appear in the output in the left-to-right order they
-    appear in <lst>.
-
-    @type lst: str | list
-    @rtype: list[str]
+def get_new_word_count(letter_count, word):
+    """ get new word count dict from a word
+    @type letter_count: dict[str, int]
+    @type word: str
+    @rtype: dict[str, int]
     """
-    if isinstance(lst, str):
-        return [lst]
-    else:
-        result = []
-        for lst_i in lst:
-            result += flatten(lst_i)
-        return result
+    new = {}
+    for char in LETTERS:
+        new[char] = letter_count[char] - word.count(char)
+    return new
 
 
 def _within_letter_count(word, letter_count):
