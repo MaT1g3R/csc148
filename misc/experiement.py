@@ -27,14 +27,13 @@ names = ['Donald Trump:', 'Governor Gary Johnson:', 'Dr. Jill Stein:', 'Secretar
 
 def _read_tweets_helper(file):
     lst = []
-    with open(file) as f:
-        for line in f:
-            temp_line = line.strip('\n')
-            lst.append(temp_line)
+    for line in file:
+        temp_line = line.strip('\n')
+        lst.append(temp_line)
     return lst
 
 
-def read_tweets(file, cand):
+def read_tweets(file):
     """Each tweet end is marked by <<<EOT
     and each tweet begins with an info str
     then 1 or more text strs
@@ -43,6 +42,7 @@ def read_tweets(file, cand):
     ['Trump:', 'info','text','text','<<<EOT', 'info','text','<<<EOT', 'Clinto:','info','text','text','<<<EOT', 'info','text','<<<EOT']
     So how the fuck do i format this shit
     """
+    cand = {}
     raw = _read_tweets_helper(file)
 
     curr_can = ''
@@ -70,3 +70,35 @@ def read_tweets(file, cand):
 
                 cand[curr_can].append(formated)
                 tmp_tweet = []
+
+    return cand
+
+
+def most_popular(info, start, end):
+
+    cand = {}
+
+    for key in info:
+        cand[key] = 0
+
+    for key, val in info.items():  # val is a list of tuples
+        for tup in val:
+
+            name = tup[0]
+            date = int(tup[2])
+            fav = int(tup[4])
+            ret = int(tup[5])
+
+            if start <= date <= end:
+                cand[name] += fav + ret
+
+    max_num = cand[max(cand)]
+    most = []
+
+    for key, val in cand.items():
+        if val == max_num:
+            most.append(key)
+
+    return most[0] if len(most) == 1 else 'tie'
+
+print(most_popular(read_tweets(open('short_data.txt')), 0, 999999999999999999999))

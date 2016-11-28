@@ -144,8 +144,6 @@ class AbstractTree:
         else:
             treemaps = []
             x, y, width, height = rect
-            big_x = x
-            big_y = y
 
             for i in range(len(self._subtrees)):
                 if self._subtrees[i].data_size > 0:  # empty folders are ignored
