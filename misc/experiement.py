@@ -22,6 +22,8 @@ def common(word_count, num):
         word_count[tuple_[1][0]] = tuple_[0]
 
 candidates = {}
+names = ['Donald Trump:', 'Governor Gary Johnson:', 'Dr. Jill Stein:', 'Secretary Hillary Clinton:']
+
 
 def _read_tweets_helper(file):
     lst = []
@@ -29,41 +31,42 @@ def _read_tweets_helper(file):
         for line in f:
             temp_line = line.strip('\n')
             lst.append(temp_line)
+    return lst
 
-    new_lst = []
 
-    tmp = []
+def read_tweets(file, cand):
+    """Each tweet end is marked by <<<EOT
+    and each tweet begins with an info str
+    then 1 or more text strs
+
+    the raw file looks like:
+    ['Trump:', 'info','text','text','<<<EOT', 'info','text','<<<EOT', 'Clinto:','info','text','text','<<<EOT', 'info','text','<<<EOT']
+    So how the fuck do i format this shit
+    """
+    raw = _read_tweets_helper(file)
+
+    curr_can = ''
     tmp_tweet = []
 
-    for i in lst:
-        if i[-1] == ':':
-            if tmp != []:
-                new_lst.append(tmp)
-            tmp = []
-            tmp_tweet = []
-            tmp.append(i[:-1])
+    for i in raw:
+        if i in names:  # A new candidate
+            curr_can = i.strip(':')
+            cand[curr_can] = []  # initialize a new key
+        else:  # this deals with the tweets under the cand
+            if i != '<<<EOT':
+                tmp_tweet.append(i)
+            else:
+                # do something here
+                info_list = tmp_tweet[0].split(',')
 
-        elif i != '<<<EOT':
-            tmp_tweet.append(i)
+                text = '\n'.join(tmp_tweet[1:])
 
-        elif i == '<<<EOT':
-            tmp.append(tmp_tweet)
-            tmp_tweet = []
+                date = info_list[1]
+                source = info_list[3]
+                fav = info_list[4]
+                retweet = info_list[5]
 
-    return new_lst
+                formated = (curr_can, text, date, source, fav, retweet)
 
-
-def read_tweets(file, _candidates):
-    lst = _read_tweets_helper(file)
-    for i in lst:
-        _candidates[i[0]] = []
-        for ele in i[1:]:
-            info_list = ele[0].split(',')
-            tweet = '\n'.join(ele[1:])
-            info_and_tweet_list = [i[0]] + [tweet] + [info_list[1]] + [info_list[3]] + [info_list[4]] + [info_list[5]]
-            tmp_tuple = tuple(info_and_tweet_list)
-            _candidates[i[0]].append(tmp_tuple)
-
-
-read_tweets('short_data.txt', candidates)
-print(candidates)
+                cand[curr_can].append(formated)
+                tmp_tweet = []
