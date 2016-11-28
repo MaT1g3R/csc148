@@ -144,24 +144,34 @@ class AbstractTree:
         else:
             treemaps = []
             x, y, width, height = rect
+            for subtree in self._subtrees:
+                if subtree.data_size <= 0:  # empty folders are ignored
+                    continue
+                ratio = subtree.data_size/self.data_size
+                sub_w = math.floor(ratio * width)
+                sub_h = math.floor(ratio * height)
+                if width > height:
+                    treemaps += subtree.generate_treemap((x, y, sub_w, height))
+                    x += sub_w
+                else:
+                    treemaps += subtree.generate_treemap((x, y, width, sub_h))
+                    y += sub_h
 
-            for i in range(len(self._subtrees)):
-                if self._subtrees[i].data_size > 0:  # empty folders are ignored
-                    ratio = self._subtrees[i].data_size/self.data_size
-                    if width > height:
+            if width > height:
+                t_x, t_y, t_w, t_h = treemaps[-1][0]
+                t_c = treemaps[-1][1]
 
-                        small_w = math.floor(width*ratio)
-                        treemaps += self._subtrees[i].generate_treemap(
-                            (x, y, small_w, height))
-                        x += small_w
-                        size_fixing_w(treemaps, width)
+                t_w += (x + width) - (t_x + t_w)
+                treemaps[-1] = ((t_x,t_y,t_w,t_h),t_c)
 
-                    else:
-                        small_h = math.floor(height * ratio)
-                        treemaps += self._subtrees[i].generate_treemap(
-                            (x, y, width, small_h))
-                        y += small_h
-                        size_fixing_h(treemaps, height)
+            else:
+                t_x, t_y, t_w, t_h = treemaps[-1][0]
+                t_c = treemaps[-1][1]
+                t_h += 10
+                treemaps[-1] = ((t_x, t_y, t_w, t_h), t_c)
+
+
+
 
             return treemaps
 
