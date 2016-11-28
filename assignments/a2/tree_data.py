@@ -144,34 +144,27 @@ class AbstractTree:
         else:
             treemaps = []
             x, y, width, height = rect
+            orig_x = rect[0]
+            orig_y = rect[1]
             for subtree in self._subtrees:
                 if subtree.data_size <= 0:  # empty folders are ignored
                     continue
                 ratio = subtree.data_size/self.data_size
                 sub_w = math.floor(ratio * width)
                 sub_h = math.floor(ratio * height)
-                if width > height:
+
+                if width >= height:
                     treemaps += subtree.generate_treemap((x, y, sub_w, height))
                     x += sub_w
                 else:
                     treemaps += subtree.generate_treemap((x, y, width, sub_h))
                     y += sub_h
+                if subtree is self._subtrees[-1]:
 
-            if width > height:
-                t_x, t_y, t_w, t_h = treemaps[-1][0]
-                t_c = treemaps[-1][1]
-
-                t_w += (x + width) - (t_x + t_w)
-                treemaps[-1] = ((t_x,t_y,t_w,t_h),t_c)
-
-            else:
-                t_x, t_y, t_w, t_h = treemaps[-1][0]
-                t_c = treemaps[-1][1]
-                t_h += 10
-                treemaps[-1] = ((t_x, t_y, t_w, t_h), t_c)
-
-
-
+                    tx, ty, tw, th = treemaps[-1][0]
+                    tw += (width + orig_x) - (tx + tw)
+                    th += (height + orig_y) - (ty + th)
+                    treemaps[-1] = (tx, ty, tw, th), treemaps[-1][1]
 
             return treemaps
 
@@ -303,9 +296,12 @@ class FileSystemTree(AbstractTree):
             subtrees = []
             for filename in os.listdir(path):
                 subitem = os.path.join(path, filename)
+                if filename == '.DS_Store':
+                    continue
                 subtrees += [FileSystemTree(subitem)]
             AbstractTree.__init__(self, os.path.basename(path), subtrees)
 
+        # ignore '.DS_Store'
     def get_separator(self):
         """ Use </> to indicate the path for the file tree
         @type self: FileSystemTree
