@@ -97,12 +97,12 @@ class AbstractTree:
 
         # Make sure no dupelicate colours happen
         if self._subtrees != []:
-            while self.colour in self._exclude_colors():
+            while self.colour in self.exclude_colors():
                 self.colour = (randint(0, 255),
                                randint(0, 255),
                                randint(0, 255))
 
-    def _exclude_colors(self):
+    def exclude_colors(self):
         """ Return all colours in all subtrees
         @type self: AbstractTree
         @rtype: list[(int, int, int)]
@@ -113,7 +113,7 @@ class AbstractTree:
             r = []
             for s in self._subtrees:
                 r += [s.colour]
-                r += s._exclude_colors()
+                r += s.exclude_colors()
             return r + [(0, 0, 0)]
 
     def is_empty(self):
@@ -144,27 +144,25 @@ class AbstractTree:
         else:
             treemaps = []
             x, y, width, height = rect
-            orig_x = rect[0]
-            orig_y = rect[1]
+            orig_x = x
+            orig_y = y
             for subtree in self._subtrees:
                 if subtree.data_size <= 0:  # empty folders are ignored
                     continue
                 ratio = subtree.data_size/self.data_size
-                sub_w = math.floor(ratio * width)
-                sub_h = math.floor(ratio * height)
+                if subtree is self._subtrees[-1]:
+                    sub_w = width + orig_x - x
+                    sub_h = height + orig_y - y
+                else:
+                    sub_w = math.floor(ratio * width)
+                    sub_h = math.floor(ratio * height)
 
-                if width >= height:
+                if width > height:
                     treemaps += subtree.generate_treemap((x, y, sub_w, height))
                     x += sub_w
                 else:
                     treemaps += subtree.generate_treemap((x, y, width, sub_h))
                     y += sub_h
-                if subtree is self._subtrees[-1]:
-
-                    tx, ty, tw, th = treemaps[-1][0]
-                    tw += (width + orig_x) - (tx + tw)
-                    th += (height + orig_y) - (ty + th)
-                    treemaps[-1] = (tx, ty, tw, th), treemaps[-1][1]
 
             return treemaps
 
@@ -341,12 +339,12 @@ if __name__ == '__main__':
     python_ta.check_all(config='pylintrc.txt')
 
     # mac_dir = '/Users/PeijunsMac/Desktop/csc148/assignments'
-    _windr = 'A:/Python Projects/csc148 _backup'
+    # _windr = 'A:/Python Projects/csc148 _backup'
     # _common = 'a2/tree_data.py'
     #
-    tree = FileSystemTree(os.path.join(_windr))
+    # tree = FileSystemTree(os.path.join(_windr))
     # print(tree.data_size)
     #
     # tree2 = FileSystemTree(_windr)
     # print(tree2.to_nested_list())
-    tree.generate_treemap((0, 0, 1024, 720))
+    # tree.generate_treemap((0, 0, 1024, 720))
