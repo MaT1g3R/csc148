@@ -151,16 +151,14 @@ class AbstractTree:
                     continue
                 ratio = subtree.data_size/self.data_size
                 if subtree is self._subtrees[-1]:
-                    sub_w = width + orig_x - x
-                    sub_h = height + orig_y - y
-                else:
+                    treemaps += subtree.generate_treemap(
+                        (x, y, (orig_x + width) - x, (orig_y + height) - y))
+                elif width > height:
                     sub_w = math.floor(ratio * width)
-                    sub_h = math.floor(ratio * height)
-
-                if width > height:
                     treemaps += subtree.generate_treemap((x, y, sub_w, height))
                     x += sub_w
                 else:
+                    sub_h = math.floor(ratio * height)
                     treemaps += subtree.generate_treemap((x, y, width, sub_h))
                     y += sub_h
 
