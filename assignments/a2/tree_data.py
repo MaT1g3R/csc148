@@ -152,7 +152,7 @@ class AbstractTree:
                 ratio = subtree.data_size/self.data_size
                 if subtree is self._subtrees[-1]:
                     treemaps += subtree.generate_treemap(
-                        (x, y, (orig_x + width) - x, (orig_y + height) - y))
+                        (x, y, (orig_x + width) - x + 1, (orig_y + height) - y))
                 elif width > height:
                     sub_w = math.floor(ratio * width)
                     treemaps += subtree.generate_treemap((x, y, sub_w, height))
