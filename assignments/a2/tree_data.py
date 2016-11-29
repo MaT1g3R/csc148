@@ -137,32 +137,52 @@ class AbstractTree:
             Input is in the pygame format: (x, y, width, height)
         @rtype: list[((int, int, int, int), (int, int, int))]
         """
-        if self.is_empty():
-            pass
-        elif self._subtrees == []:
+        if self._subtrees == []:
             return [(rect, self.colour)]
         else:
             treemaps = []
             x, y, width, height = rect
             orig_x = x
             orig_y = y
-            for subtree in self._subtrees:
-                if subtree.data_size <= 0:  # empty folders are ignored
-                    continue
-                ratio = subtree.data_size/self.data_size
-                if subtree is self._subtrees[-1]:
+            if self.data_size <= 0:
+                return []
+            if width > height:
+                for subtree in self._subtrees:
+                    ratio = subtree.data_size/self.data_size
+                    sub_width = math.floor(ratio * width)
+                    sub_width += self._calc_last(
+                        subtree, (width, sub_width, x, orig_x))
                     treemaps += subtree.generate_treemap(
-                        (x, y, (orig_x + width) - x + 1, (orig_y + height) - y))
-                elif width > height:
-                    sub_w = math.floor(ratio * width)
-                    treemaps += subtree.generate_treemap((x, y, sub_w, height))
-                    x += sub_w
-                else:
-                    sub_h = math.floor(ratio * height)
-                    treemaps += subtree.generate_treemap((x, y, width, sub_h))
-                    y += sub_h
+                        (x, y, sub_width, height))
+                    x += sub_width
+            else:
+                for subtree in self._subtrees:
+                    ratio = subtree.data_size/self.data_size
+                    sub_height = math.floor(ratio * height)
+                    sub_height += self._calc_last(
+                        subtree, (height, sub_height, y, orig_y))
+
+                    treemaps += subtree.generate_treemap(
+                        (x, y, width, sub_height))
+                    y += sub_height
 
             return treemaps
+
+    def _calc_last(self, subtree, vals):
+        """calculate the value needed to be
+        added to the last rectangle in a treemap
+        @type subtree: AbstractTree
+        @type vals = (int, int, int, int)
+            the 4 ints in the tuple are:
+                the width of the big rectangle
+                the calculated with from ratio of the small rectangle
+                the position of the current rectangle
+                the position of the big rectangle
+        @rtype: int
+        """
+        value, sub_value, point, orig_point = vals
+        return (value + orig_point) - (point + sub_value) \
+            if subtree is self._subtrees[-1] else 0
 
     def get_separator(self):
         """Return the string used to separate nodes in the string
