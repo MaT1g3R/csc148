@@ -44,14 +44,23 @@ def read_tweets(file):
     """
     cand = {}
     raw = _read_tweets_helper(file)
-
+    past_cands = []
     curr_can = ''
     tmp_tweet = []
 
     for i in raw:
-        if i in names:  # A new candidate
-            curr_can = i.strip(':')
-            cand[curr_can] = []  # initialize a new key
+        if i in names and i not in past_cands:  # A new candidate
+            _id = raw.index(i) - 1
+            tmp_line = []
+            try:
+                tmp_line.append(raw[_id])
+            finally:
+                tmp_line.append(None)
+
+            if tmp_line[0] == '<<<EOT' or tmp_line[0] is None:
+                past_cands.append(i)
+                curr_can = i.strip(':')
+                cand[curr_can] = []  # initialize a new key
         else:  # this deals with the tweets under the cand
             if i != '<<<EOT':
                 tmp_tweet.append(i)
@@ -101,4 +110,3 @@ def most_popular(info, start, end):
 
     return most[0] if len(most) == 1 else 'tie'
 
-print(most_popular(read_tweets(open('short_data.txt')), 0, 999999999999999999999))
