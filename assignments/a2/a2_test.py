@@ -10,18 +10,24 @@ This module contains sample tests for Assignment 2, Tasks 1 and 2.
 Note that the data set here is a pretty small one, but should be enough to
 give you an idea of how we could test your code.
 
-NOTE:
+NOTES:
     - If using PyCharm, go into your Settings window, and go to
       Editor -> General.
       Make sure the "Ensure line feed at file end on Save" is NOT checked.
       Then, make sure none of the example files have a blank line at the end.
       (If they do, the data size will be off.)
+
+    - os.listdir behaves differently on different
+      operating systems, so these tests have been updated
+      to work on the *Teaching Lab machines*.
+      Please do your testing there - otherwise,
+      you might get inaccurate test failures!
 """
 import os
 
 import unittest
 from hypothesis import given
-from hypothesis.strategies import integers, lists, recursive, builds, text, just
+from hypothesis.strategies import integers
 
 from tree_data import FileSystemTree
 
@@ -69,10 +75,11 @@ class FileSystemTreeConstructorTest(unittest.TestCase):
             self.assertIs(subtree._parent_tree, tree)
 
     def test_example_data_subtree_order(self):
-        """NOTE: the order of the subtrees for a FileSystemTree object
-        *must* match the order of the items returned by os.listdir.
+        """UPDATED: the order of the subtrees now doesn't matter,
+        as they will be sorted alphabetically by the test itself.
         """
         tree = FileSystemTree(EXAMPLE_PATH)
+        _sort_subtrees(tree)
 
         self.assertEqual(len(tree._subtrees), 2)
         first, second = tree._subtrees
@@ -95,7 +102,7 @@ class GenerateTreemapTest(unittest.TestCase):
         tree = FileSystemTree(os.path.join(EXAMPLE_PATH, 'f4.txt'))
         rects = tree.generate_treemap((x, y, width, height))
 
-        # This should be just a single rectangle and colour returned
+        # This should be just a single rectangle and colour returned.
         self.assertEqual(len(rects), 1)
         rect, colour = rects[0]
         self.assertEqual(rect, (x, y, width, height))
@@ -105,28 +112,53 @@ class GenerateTreemapTest(unittest.TestCase):
             self.assertLessEqual(colour[i], 255)
 
     def test_example_data(self):
+        """UPDATED: the order of the subtrees now doesn't matter,
+        as they will be sorted alphabetically by the test itself.
+        """
         tree = FileSystemTree(EXAMPLE_PATH)
+        _sort_subtrees(tree)
+
         rects = tree.generate_treemap((0, 0, 800, 1000))
 
         # This should be one rectangle per file in 'B'.
         self.assertEqual(len(rects), 4)
 
-        # Here, we illustrate the correct order of the returned rectangle.
-        # Note that this again corresponds to the order in which os.listdir
-        # reports the contents of a folder.
-        rect_f1 = rects[0][0]
-        rect_f2 = rects[1][0]
-        rect_f3 = rects[2][0]
-        rect_f4 = rects[3][0]
+        # UPDATED:
+        # Here, we illustrate the correct order of the returned rectangles.
+        # Note that this corresponds to the folder contents always being
+        # sorted in alphabetical order.
+        rect_f1 = rects[0][0]  # f1.txt
+        rect_f2 = rects[1][0]  # f2.txt
+        rect_f3 = rects[2][0]  # f3.txt
+        rect_f4 = rects[3][0]  # f4.txt
 
+        # The 'A' rectangle is (0, 0, 800, 750).
         self.assertEqual(rect_f1, (0, 0, 400, 750))
         # Note the rounding down on f2.
         self.assertEqual(rect_f2, (400, 0, 133, 750))
-        # Note that f3 has a width of 267, to bring the total width of
-        # the 'A' rectangle to exactly 800.
+        # Note the adjustment to f3 to bring the total width to 800.
         self.assertEqual(rect_f3, (533, 0, 267, 750))
 
+        # The 'f4.txt' rectangle.
         self.assertEqual(rect_f4, (0, 750, 800, 250))
+
+
+##############################################################################
+# Helper to sort subtrees alphabetically
+##############################################################################
+def _sort_subtrees(tree):
+    """Sort the subtrees of <tree> in alphabetical order.
+
+    This is recursive, and affects all levels of the tree.
+
+    @type tree: AbstractTree
+    @rtype: None
+    """
+    if not tree.is_empty():
+        for subtree in tree._subtrees:
+            _sort_subtrees(subtree)
+
+        tree._subtrees.sort(key=lambda t: t._root)
 
 
 if __name__ == '__main__':
