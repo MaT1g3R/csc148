@@ -140,49 +140,35 @@ class AbstractTree:
         if self._subtrees == []:
             return [(rect, self.colour)]
         else:
-            treemaps = []
             x, y, width, height = rect
             orig_x = x
             orig_y = y
-            if self.data_size <= 0:
-                return []
-            if width > height:
-                for subtree in self._subtrees:
-                    ratio = subtree.data_size/self.data_size
-                    sub_width = math.floor(ratio * width)
-                    sub_width += self._calc_last(
-                        subtree, (width, sub_width, x, orig_x))
-                    treemaps += subtree.generate_treemap(
-                        (x, y, sub_width, height))
-                    x += sub_width
-            else:
-                for subtree in self._subtrees:
-                    ratio = subtree.data_size/self.data_size
-                    sub_height = math.floor(ratio * height)
-                    sub_height += self._calc_last(
-                        subtree, (height, sub_height, y, orig_y))
+            treemaps = []
+            pending_list = []
 
-                    treemaps += subtree.generate_treemap(
-                        (x, y, width, sub_height))
-                    y += sub_height
+            for subtree in self._subtrees:
+                if subtree.data_size > 0:
+                    pending_list.append(subtree)
+            if pending_list == []:
+                return []
+            last_block = pending_list[-1]
+            if width > height:
+                for subtree in pending_list[:-1]:
+                    ratio = subtree.data_size/self.data_size
+                    sub_w = math.floor(width * ratio)
+                    treemaps += subtree.generate_treemap((x, y, sub_w, height))
+                    x += sub_w
+            else:
+                for subtree in pending_list[:-1]:
+                    ratio = subtree.data_size / self.data_size
+                    sub_h = math.floor(height * ratio)
+                    treemaps += subtree.generate_treemap((x, y, width, sub_h))
+                    y += sub_h
+
+            treemaps += last_block.generate_treemap(
+                (x, y, orig_x + width - x, orig_y + height - y))
 
             return treemaps
-
-    def _calc_last(self, subtree, vals):
-        """calculate the value needed to be
-        added to the last rectangle in a treemap
-        @type subtree: AbstractTree
-        @type vals = (int, int, int, int)
-            the 4 ints in the tuple are:
-                the width of the big rectangle
-                the calculated with from ratio of the small rectangle
-                the position of the current rectangle
-                the position of the big rectangle
-        @rtype: int
-        """
-        value, sub_value, point, orig_point = vals
-        return (value + orig_point) - (point + sub_value) \
-            if subtree is self._subtrees[-1] else 0
 
     def get_separator(self):
         """Return the string used to separate nodes in the string
@@ -198,21 +184,6 @@ class AbstractTree:
         @rtype: str
         """
         raise NotImplementedError
-
-    # Debugging purposes only
-    # def to_nested_list(self):
-    #     """Return the nested list representation of this tree.
-    #
-    #     @type self: Tree
-    #     @rtype: list
-    #     """
-    #     if len(self._subtrees) == 0:
-    #         return [self._root]
-    #     else:
-    #         nested = [self._root]
-    #         for subtree in self._subtrees:
-    #             nested.append(subtree.to_nested_list())
-    #         return nested
 
     def get_item_by_color(self, color):
         """ return the item with the color <color>
@@ -253,12 +224,12 @@ class AbstractTree:
             item to be deleted
         @rtype: None
         """
+        item.re_calculate_size(-item.data_size)
         if self._parent_tree is None:
             pass
-        elif self == item:
-            self._root = None
-            self._subtrees = []
-            self._parent_tree = None
+        elif item in self._subtrees:
+            self._subtrees.remove(item)
+            item._parent_tree = None
         else:
             for s in self._subtrees:
                 s.delete_item(item)
@@ -324,32 +295,6 @@ class FileSystemTree(AbstractTree):
         @rtype: str
         """
         return '/'
-
-
-def size_fixing_h(treemaps, passed_in_height):
-    """size fixing helper for height
-    @type treemaps: list[((int, int, int, int), (int, int, int))]
-    @type passed_in_height: int
-    @rtype: None
-    """
-    for index in range(len(treemaps)):
-        x, y, width, height = treemaps[index][0]
-        color = treemaps[index][1]
-        height += passed_in_height - y - height
-        treemaps[index] = ((x, y, width, height), color)
-
-
-def size_fixing_w(treemaps, passed_in_width):
-    """size fixing helper for height
-    @type treemaps: list[((int, int, int, int), (int, int, int))]
-    @type passed_in_width: int
-    @rtype: None
-    """
-    for index in range(len(treemaps)):
-        x, y, width, height = treemaps[index][0]
-        color = treemaps[index][1]
-        width += passed_in_width - x - width
-        treemaps[index] = ((x, y, width, height), color)
 
 if __name__ == '__main__':
     import python_ta

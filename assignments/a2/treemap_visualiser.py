@@ -151,8 +151,6 @@ def _mouse_event(selected_leaf, event, tree, current_color):
             if deleting == selected_leaf[0]:
                 selected_leaf.clear()
         if deleting is not None:
-            deleted_size = -deleting.data_size
-            deleting.re_calculate_size(deleted_size)
             tree.delete_item(deleting)
 
 
@@ -201,7 +199,7 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     # _macdr = '/Users/PeijunsMac/Desktop/csc148'
-    # run_treemap_file_system('A:/Python Projects/csc148 _backup')
+    run_treemap_file_system('A:/Python Projects/csc148 _backup')
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/mkv')
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/csc148/assignments')
 
