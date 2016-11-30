@@ -137,6 +137,8 @@ class AbstractTree:
             Input is in the pygame format: (x, y, width, height)
         @rtype: list[((int, int, int, int), (int, int, int))]
         """
+        if self.data_size <= 0:
+            return []
         if self._subtrees == []:
             return [(rect, self.colour)]
         else:
@@ -144,8 +146,7 @@ class AbstractTree:
             x, y, width, height = rect
             orig_x = x
             orig_y = y
-            if self.data_size <= 0:
-                return []
+
             if width > height:
                 for subtree in self._subtrees:
                     ratio = subtree.data_size/self.data_size
@@ -158,10 +159,10 @@ class AbstractTree:
             else:
                 for subtree in self._subtrees:
                     ratio = subtree.data_size/self.data_size
+
                     sub_height = math.floor(ratio * height)
                     sub_height += self._calc_last(
                         subtree, (height, sub_height, y, orig_y))
-
                     treemaps += subtree.generate_treemap(
                         (x, y, width, sub_height))
                     y += sub_height
@@ -240,10 +241,8 @@ class AbstractTree:
             the change in size, can be positive or negative
         @rtype: None
         """
-        if self._parent_tree is None:
-            self.data_size += change
-        else:
-            self.data_size += change
+        self.data_size += change
+        if self._parent_tree is not None:
             self._parent_tree.re_calculate_size(change)
 
     def delete_item(self, item):
@@ -253,12 +252,11 @@ class AbstractTree:
             item to be deleted
         @rtype: None
         """
+        item.re_calculate_size(-item.data_size)
         if self._parent_tree is None:
             pass
-        elif self == item:
-            self._root = None
-            self._subtrees = []
-            self._parent_tree = None
+        elif item in self._subtrees:
+            self._subtrees.remove(item)
         else:
             for s in self._subtrees:
                 s.delete_item(item)
@@ -324,32 +322,6 @@ class FileSystemTree(AbstractTree):
         @rtype: str
         """
         return '/'
-
-
-def size_fixing_h(treemaps, passed_in_height):
-    """size fixing helper for height
-    @type treemaps: list[((int, int, int, int), (int, int, int))]
-    @type passed_in_height: int
-    @rtype: None
-    """
-    for index in range(len(treemaps)):
-        x, y, width, height = treemaps[index][0]
-        color = treemaps[index][1]
-        height += passed_in_height - y - height
-        treemaps[index] = ((x, y, width, height), color)
-
-
-def size_fixing_w(treemaps, passed_in_width):
-    """size fixing helper for height
-    @type treemaps: list[((int, int, int, int), (int, int, int))]
-    @type passed_in_width: int
-    @rtype: None
-    """
-    for index in range(len(treemaps)):
-        x, y, width, height = treemaps[index][0]
-        color = treemaps[index][1]
-        width += passed_in_width - x - width
-        treemaps[index] = ((x, y, width, height), color)
 
 if __name__ == '__main__':
     import python_ta
