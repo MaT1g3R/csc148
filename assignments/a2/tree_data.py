@@ -200,21 +200,6 @@ class AbstractTree:
         """
         raise NotImplementedError
 
-    # Debugging purposes only
-    # def to_nested_list(self):
-    #     """Return the nested list representation of this tree.
-    #
-    #     @type self: Tree
-    #     @rtype: list
-    #     """
-    #     if len(self._subtrees) == 0:
-    #         return [self._root]
-    #     else:
-    #         nested = [self._root]
-    #         for subtree in self._subtrees:
-    #             nested.append(subtree.to_nested_list())
-    #         return nested
-
     def get_item_by_color(self, color):
         """ return the item with the color <color>
         @type self: AbstractTree
