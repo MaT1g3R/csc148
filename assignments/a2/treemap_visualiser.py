@@ -208,7 +208,7 @@ if __name__ == '__main__':
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/csc148')
 
     # To check your work for Task 5, uncomment the following function call.
-    run_treemap_population()
+    # run_treemap_population()
     # import os
     # EXAMPLE_PATH = os.path.join('example-data', 'B')
     # run_treemap_file_system(EXAMPLE_PATH)
