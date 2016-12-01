@@ -110,8 +110,7 @@ def event_loop(screen, tree):
         # Mouse events
         if event.type == pygame.MOUSEBUTTONUP:
             pos = event.pos
-            current_color = screen.get_at(pos)[:3]
-            _mouse_event(selected_leaf, event, tree, current_color)
+            _mouse_event(selected_leaf, event, tree, pos)
         # Keyboard events
         if event.type == pygame.KEYUP:
             _keyboard_event(selected_leaf, event)
@@ -125,27 +124,32 @@ def event_loop(screen, tree):
             render_display(screen, tree, '')
 
 
-def _mouse_event(selected_leaf, event, tree, current_color):
+def _mouse_event(selected_leaf, event, tree, pos):
     """ helper to process mouse events
     @type selected_leaf: list[FileSystemTree | PopulationTree]
     @type event: pygame.event
     @type tree: FileSystemTree | PopulationTree
-    @type current_color: (int, int, int)
+    @type pos: (int, int)
+        mouse position
     @rtype: None
     """
     if event.button == 1:  # left click
         # nothing is selected
         if selected_leaf == []:
-            selected_leaf.append(tree.get_item_by_color(current_color))
+            # selected_leaf.append(tree.get_item_by_color(current_color))
+            selected_leaf.append(tree.find_tree_by_loc((
+                0, 0, WIDTH, TREEMAP_HEIGHT), pos))
         # Deselect event
-        elif selected_leaf[0] == tree.get_item_by_color(current_color):
+        elif selected_leaf[0] == tree.find_tree_by_loc((
+                0, 0, WIDTH, TREEMAP_HEIGHT), pos):
             selected_leaf.clear()
         # General
         else:
             selected_leaf.clear()
-            selected_leaf.append(tree.get_item_by_color(current_color))
+            selected_leaf.append(tree.find_tree_by_loc((
+                0, 0, WIDTH, TREEMAP_HEIGHT), pos))
     elif event.button == 3:  # right click
-        deleting = tree.get_item_by_color(current_color)
+        deleting = tree.find_tree_by_loc((0, 0, WIDTH, TREEMAP_HEIGHT), pos)
         # clear selected if deleted == selected
         if selected_leaf != []:
             if deleting == selected_leaf[0]:
@@ -199,7 +203,7 @@ if __name__ == '__main__':
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     # _macdr = '/Users/PeijunsMac/Desktop/csc148'
-    # run_treemap_file_system('A:/Python Projects/csc148/assignments/a2')
+    run_treemap_file_system('A:/Python Projects/csc148')
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/mkv')
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/csc148')
 

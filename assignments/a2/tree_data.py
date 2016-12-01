@@ -185,23 +185,65 @@ class AbstractTree:
         """
         raise NotImplementedError
 
-    def get_item_by_color(self, color):
-        """ return the item with the color <color>
-        @type self: AbstractTree
-        @type color: tuple(int, int, int)
-            the color that the user inputs
-        @rtype: AbstractTree
-            return the AbstractTree with the color <color>
+    def search_by_loc_helper(self, rect):
         """
-
-        if self.is_empty():
-            pass
-        elif self.colour == color and self._subtrees == []:
-            return self
+        return a list of rectangles and the trees associates with the rectangles
+        @type self: AbstractTree
+        @type rect: (int, int, int, int)
+            Input is in the pygame format: (x, y, width, height)
+        @rtype: list[((int, int, int, int), AbstractTree)]
+        """
+        if self._subtrees == []:
+            return [(rect, self)]
         else:
-            for s in self._subtrees:
-                if s.get_item_by_color(color) is not None:
-                    return s.get_item_by_color(color)
+            x, y, width, height = rect
+            orig_x = x
+            orig_y = y
+            treemaps = []
+            pending_list = []
+
+            for subtree in self._subtrees:
+                if subtree.data_size > 0:
+                    pending_list.append(subtree)
+            if pending_list == []:
+                return []
+            last_block = pending_list[-1]
+            if width > height:
+                for subtree in pending_list[:-1]:
+                    ratio = subtree.data_size/self.data_size
+                    sub_w = math.floor(width * ratio)
+                    treemaps += subtree.search_by_loc_helper((
+                        x, y, sub_w, height))
+                    x += sub_w
+            else:
+                for subtree in pending_list[:-1]:
+                    ratio = subtree.data_size / self.data_size
+                    sub_h = math.floor(height * ratio)
+                    treemaps += subtree.search_by_loc_helper((
+                        x, y, width, sub_h))
+                    y += sub_h
+
+            treemaps += last_block.search_by_loc_helper(
+                (x, y, orig_x + width - x, orig_y + height - y))
+
+            return treemaps
+
+    def find_tree_by_loc(self, rect, loc):
+        """ Find the tree that the mouse clicked
+        @type rect: (int, int, int, int)
+            Input is in the pygame format: (x, y, width, height)
+        @type loc: (int, int)
+            The mouse position
+        @rtype: AbstractTree | None
+            Return the AbstractTree if it's found else None
+        """
+        treemap = self.search_by_loc_helper(rect)
+        m_x = loc[0]
+        m_y = loc[1]
+        for tree in treemap:
+            x, y, width, height = tree[0]
+            if x <= m_x <= x + width and y <= m_y <= y + height:
+                return tree[1]
 
     def re_calculate_size(self, change):
         """ re calculate the size of everything
