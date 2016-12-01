@@ -217,8 +217,7 @@ class AbstractTree:
             Return the AbstractTree if it's found else None
         """
         treemap = self.search_by_loc_helper(rect)
-        m_x = loc[0]
-        m_y = loc[1]
+        m_x, m_y = loc
         for tree in treemap:
             x, y, width, height = tree[0]
             if x <= m_x <= x + width and y <= m_y <= y + height:
