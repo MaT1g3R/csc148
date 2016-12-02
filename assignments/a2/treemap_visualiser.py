@@ -101,7 +101,7 @@ def event_loop(screen, tree):
     # selected leaf (type AbstractTree | None).
     # But feel free to remove it, and/or add new variables, to help keep
     # track of the state of the program.
-    selected_leaf = []
+    selected_leaf = [None]
     while True:
         # Wait for an event
         event = pygame.event.poll()
@@ -116,7 +116,7 @@ def event_loop(screen, tree):
             _keyboard_event(selected_leaf, event)
 
         # rendering event with path
-        if selected_leaf != [] and selected_leaf != [None]:
+        if selected_leaf[0] is not None:
             render_display(screen, tree,
                            selected_leaf[0].get_path_and_size())
         # rendering empty
@@ -126,50 +126,38 @@ def event_loop(screen, tree):
 
 def _mouse_event(selected_leaf, event, tree, pos):
     """ helper to process mouse events
-    @type selected_leaf: list[FileSystemTree | PopulationTree]
+    @type selected_leaf: list[AbstractTree | None]
     @type event: pygame.event
-    @type tree: FileSystemTree | PopulationTree
+    @type tree: AbstractTree
     @type pos: (int, int)
         mouse position
     @rtype: None
     """
-    if event.button == 1:  # left click
-        # nothing is selected
-        if selected_leaf == []:
-            # selected_leaf.append(tree.get_item_by_color(current_color))
-            selected_leaf.append(tree.find_tree_by_loc((
-                0, 0, WIDTH, TREEMAP_HEIGHT), pos))
-        # Deselect event
-        elif selected_leaf[0] == tree.find_tree_by_loc((
-                0, 0, WIDTH, TREEMAP_HEIGHT), pos):
-            selected_leaf.clear()
-        # General
+    found_tree = tree.find_tree_by_loc((0, 0, WIDTH, TREEMAP_HEIGHT), pos)
+    if event.button == 1:  # left key
+        if selected_leaf[0] == found_tree:
+            selected_leaf[0] = None
         else:
-            selected_leaf.clear()
-            selected_leaf.append(tree.find_tree_by_loc((
-                0, 0, WIDTH, TREEMAP_HEIGHT), pos))
-    elif event.button == 3:  # right click
-        deleting = tree.find_tree_by_loc((0, 0, WIDTH, TREEMAP_HEIGHT), pos)
-        # clear selected if deleted == selected
-        if selected_leaf != []:
-            if deleting == selected_leaf[0]:
-                selected_leaf.clear()
-        if deleting is not None:
-            tree.delete_item(deleting)
+            selected_leaf[0] = found_tree
+    elif event.button == 3 and found_tree is not None:  # right key
+        tree.delete_item(found_tree)
+        if selected_leaf[0] == found_tree:
+            selected_leaf[0] = None
 
 
 def _keyboard_event(selected_leaf, event):
     """ helper to process mouse events
-    @type selected_leaf: list[FileSystemTree | PopulationTree]
+    @type selected_leaf: list[None | AbstractTree]
     @type event: pygame.event
     @rtype: None
     """
-    if selected_leaf != []:
-        changed_size = math.ceil(selected_leaf[0].data_size / 100)
+    temptree = selected_leaf[0]
+    if temptree is not None:
+        change = math.ceil(temptree.data_size / 100)
         if event.key == pygame.K_UP:
-            selected_leaf[0].re_calculate_size(changed_size)
+            temptree.re_calculate_size(change)
         elif event.key == pygame.K_DOWN:
-            selected_leaf[0].re_calculate_size(-changed_size)
+            temptree.re_calculate_size(-change)
 
 
 def run_treemap_file_system(path):
@@ -198,8 +186,8 @@ if __name__ == '__main__':
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_all(config='pylintrc.txt')
 
-    # To check your work for Tasks 1-4, try uncommenting the following function
-    # call, with the '' replaced by a path like
+    # To check your work for Tasks 1-4, tr ay uncommenting the following function
+    # call, with the '' replaced by path like
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
     # _macdr = '/Users/PeijunsMac/Desktop/csc148'
@@ -209,6 +197,6 @@ if __name__ == '__main__':
 
     # To check your work for Task 5, uncomment the following function call.
     # run_treemap_population()
-    # import os
-    # EXAMPLE_PATH = os.path.join('example-data', 'B')
-    # run_treemap_file_system(EXAMPLE_PATH)
+    import os
+    EXAMPLE_PATH = os.path.join('example-data', 'B')
+    run_treemap_file_system(EXAMPLE_PATH)

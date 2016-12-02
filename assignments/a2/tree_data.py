@@ -164,64 +164,72 @@ class AbstractTree:
         """
         raise NotImplementedError
 
-    def search_by_loc_helper(self, rect):
+    def find_tree_by_loc(self, rect, pos):
         """
-        return a list of rectangles and the trees associates with the rectangles
+        return the AbstractTree if it's found else None
+        @type self: AbstractTree
+        @type pos: (int, int)
+            mouse position
+        @type rect: (int, int, int, int)
+            Input is in the pygame format: (x, y, width, height)
+
+        @rtype: AbstractTree | None
+        """
+        x, y, width, height = rect
+        if self._subtrees == []:
+            return self if x <= pos[0] <= x + width and\
+                           y <= pos[1] <= y + height else None
+        else:
+            return self.search_subtrees(rect, pos, x, y)
+
+    def search_subtrees(self, rect, pos, orig_x, orig_y):
+        """A helper to search subtrees of self based on mouse location
         @type self: AbstractTree
         @type rect: (int, int, int, int)
             Input is in the pygame format: (x, y, width, height)
-        @rtype: list[((int, int, int, int), AbstractTree)]
-        """
-        if self._subtrees == []:
-            return [(rect, self)]
-        else:
-            x, y, width, height = rect
-            orig_x = x
-            orig_y = y
-            treemaps = []
-            pending_list = []
-
-            for subtree in self._subtrees:
-                if subtree.data_size > 0:
-                    pending_list.append(subtree)
-            if pending_list == []:
-                return []
-            last_block = pending_list[-1]
-            if width > height:
-                for subtree in pending_list[:-1]:
-                    ratio = subtree.data_size/self.data_size
-                    sub_w = math.floor(width * ratio)
-                    treemaps += subtree.search_by_loc_helper((
-                        x, y, sub_w, height))
-                    x += sub_w
-            else:
-                for subtree in pending_list[:-1]:
-                    ratio = subtree.data_size / self.data_size
-                    sub_h = math.floor(height * ratio)
-                    treemaps += subtree.search_by_loc_helper((
-                        x, y, width, sub_h))
-                    y += sub_h
-
-            treemaps += last_block.search_by_loc_helper(
-                (x, y, orig_x + width - x, orig_y + height - y))
-
-            return treemaps
-
-    def find_tree_by_loc(self, rect, loc):
-        """ Find the tree that the mouse clicked
-        @type rect: (int, int, int, int)
-            Input is in the pygame format: (x, y, width, height)
-        @type loc: (int, int)
-            The mouse position
+        @type pos: (int,int)
+            Mouse position
+        @type orig_x:
+            x location of self
+        @type orig_y:
+            y location of self
         @rtype: AbstractTree | None
-            Return the AbstractTree if it's found else None
         """
-        treemap = self.search_by_loc_helper(rect)
-        m_x, m_y = loc
-        for tree in treemap:
-            x, y, width, height = tree[0]
-            if x <= m_x <= x + width and y <= m_y <= y + height:
-                return tree[1]
+        pending_list = []
+        x, y, width, height = rect
+
+        for subtree in self._subtrees:
+            if subtree.data_size > 0:
+                pending_list.append(subtree)
+        if pending_list == []:
+            return None
+
+        last_block = pending_list[-1]
+        if width > height:
+            for subtree in pending_list[:-1]:
+                ratio = subtree.data_size / self.data_size
+
+                if x <= pos[0] <= x + math.floor(width * ratio) and y <= pos[
+                        1] <= y + height:
+                    return subtree.find_tree_by_loc(
+                        (x, y, math.floor(width * ratio), height), pos)
+
+                x += math.floor(width * ratio)
+        else:
+            for subtree in pending_list[:-1]:
+                ratio = subtree.data_size / self.data_size
+
+                if x <= pos[0] <= x + width and y <= pos[1] <= y + math.floor(
+                        height * ratio):
+                    return subtree.find_tree_by_loc(
+                        (x, y, width, math.floor(height * ratio)), pos)
+
+                y += math.floor(height * ratio)
+
+        if x <= pos[0] <= x + orig_x + width - x and y <= pos[
+                1] <= y + orig_y + height - y:
+            return last_block.find_tree_by_loc(
+                (x, y, orig_x + width - x, orig_y + height - y), pos)
 
     def re_calculate_size(self, change):
         """ re calculate the size of everything
@@ -303,18 +311,16 @@ class FileSystemTree(AbstractTree):
             subtrees = []
             for filename in os.listdir(path):
                 subitem = os.path.join(path, filename)
-                if filename == '.DS_Store':
-                    continue
                 subtrees += [FileSystemTree(subitem)]
             AbstractTree.__init__(self, os.path.basename(path), subtrees)
 
-        # ignore '.DS_Store'
     def get_separator(self):
         """ Use </> to indicate the path for the file tree
         @type self: FileSystemTree
         @rtype: str
         """
         return '/'
+
 
 if __name__ == '__main__':
     import python_ta
