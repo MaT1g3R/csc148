@@ -186,7 +186,6 @@ if __name__ == '__main__':
     # Remember to change this to check_all when cleaning up your code.
     python_ta.check_all(config='pylintrc.txt')
 
-    # To check your work for Tasks 1-4, tr ay uncommenting the following function
     # call, with the '' replaced by path like
     # 'C:\\Users\\David\\Documents\\csc148\\assignments' (Windows) or
     # '/Users/dianeh/Documents/courses/csc148/assignments' (OSX)
@@ -196,7 +195,7 @@ if __name__ == '__main__':
     # run_treemap_file_system('/Users/PeijunsMac/Desktop/csc148')
 
     # To check your work for Task 5, uncomment the following function call.
-    # run_treemap_population()
-    import os
-    EXAMPLE_PATH = os.path.join('example-data', 'B')
-    run_treemap_file_system(EXAMPLE_PATH)
+    run_treemap_population()
+    # import os
+    # EXAMPLE_PATH = os.path.join('example-data', 'B')
+    # run_treemap_file_system(EXAMPLE_PATH)
