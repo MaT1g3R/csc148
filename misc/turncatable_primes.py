@@ -45,17 +45,42 @@ def is_turn(n):
     return True
 
 
-def get_nth_prime(n):
-    res = [2]
-    i = 3
-    while len(res) < n:
-        is_prime = True
-        for factor in res:
-            if i % factor == 0:
-                is_prime = False
-        if is_prime:
-            res.append(i)
-        i += 1
-    return res[-1]
+def num_divisior(n):
+    """
+    return the number of divisiors for an int
+    @type n: int
+    @rtype: int
+    >>> num_divisior(14)
+    4
+    >>> num_divisior(15)
+    4
+    """
+    if n == 1:
+        return 1
+    else:
+        res = 0
+        for i in range(n + 1):
+            if i == 0:
+                continue
+            if n % i == 0:
+                res += 1
+        return res
 
-print(turncatables())
+
+def same_divisor():
+    """
+    Find the number of integers 1 < n < 10^7, for which n and n + 1 have the same
+    number of positive divisors. For example, 14 has the positive divisors 1, 2,
+    7, 14 while 15 has 1, 3, 5, 15.
+    """
+    res = 0
+    for n in range(10**7):
+        if num_divisior(n) == num_divisior(n+1):
+            res += 1
+    return res
+
+print(same_divisor())
+
+
+
+
