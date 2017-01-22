@@ -149,8 +149,6 @@ class SuperDuperManager:
         @rtype: None
         """
 
-
-        # TODO: Implement this method!
         # Get all cars
         get = dict(self._cars)
         # This is used to delete stuff while looping
@@ -208,8 +206,6 @@ class SuperDuperManager:
         self.move_car(Keys[0],x,y)
 
 
-        # TODO: Design and implement this class.
-        # TODO: Remember to document all attributes and methods!
 class Car:
     """A car in the Super system.
 
