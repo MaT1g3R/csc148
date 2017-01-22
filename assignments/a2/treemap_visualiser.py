@@ -1,4 +1,4 @@
-"""Assignment 2: Treemap Visualiser
+u"""Assignment 2: Treemap Visualiser
 
 === CSC148 Fall 2016 ===
 Diane Horton and David Liu

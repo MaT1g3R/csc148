@@ -328,12 +328,12 @@ if __name__ == '__main__':
     python_ta.check_all(config='pylintrc.txt')
 
     # mac_dir = '/Users/PeijunsMac/Desktop/csc148/assignments'
-    # _windr = 'A:/Python Projects/csc148 _backup'
-    # _common = 'a2/tree_data.py'
+    _windr = 'A:/Python Projects/csc148 _backup'
+    _common = 'a2/tree_data.py'
     #
-    # tree = FileSystemTree(os.path.join(_windr))
+    #tree = FileSystemTree(os.path.join(_windr))
     # print(tree.data_size)
     #
-    # tree2 = FileSystemTree(_windr)
+    #tree2 = FileSystemTree(_windr)
     # print(tree2.to_nested_list())
-    # tree.generate_treemap((0, 0, 1024, 720))
+    #tree2.generate_treemap((0, 0, 1024, 720))

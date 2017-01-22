@@ -65,7 +65,6 @@ class SuperDuperManager:
             # TODO: Add the new car.
             self._cars[id_] = Car(id_, fuel)
 
-
     def move_car(self, id_, new_x, new_y):
         """Move the car with the given id.
 
@@ -239,6 +238,11 @@ if __name__ == '__main__':
     # Run python_ta to ensure this module passes all checks for
     # code inconsistencies and forbidden Python features.
     # Useful for debugging!
+    myManager = SuperDuperManager()
+    myManager.add_car("asdasd", 12)
+
+
+
     import python_ta
     python_ta.check_errors()
 
