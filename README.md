@@ -1,2 +1,2 @@
 # csc148
-All my code for some first year uni course
+All of my code for some first year uni course
