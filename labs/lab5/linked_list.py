@@ -42,7 +42,7 @@ class LinkedList:
     """A linked list implementation of the List ADT.
 
     === Private Attributes ===
-    @type _first: _Node | None
+    @type first: _Node | None
         The first node in the list, or None if the list is empty.
     @type length: int
 
@@ -60,10 +60,10 @@ class LinkedList:
         self.length = 0
 
         if len(items) == 0:  # No items, and an empty list!
-            self._first = None
+            self.first = None
         else:
-            self._first = _Node(items[0])
-            current_node = self._first
+            self.first = _Node(items[0])
+            current_node = self.first
             self.length += 1
             for item in items[1:]:
                 current_node.next = _Node(item)
@@ -81,7 +81,7 @@ class LinkedList:
         @type self: LinkedList
         @rtype: bool
         """
-        return self._first is None
+        return self.first is None
 
     def __str__(self):
         """Return a string representation of this list in the form
@@ -95,7 +95,7 @@ class LinkedList:
         '[1 -> 2 -> 3]'
         """
         items = []
-        curr = self._first
+        curr = self.first
         while curr is not None:
             items.append(str(curr.item))
             curr = curr.next
@@ -110,7 +110,7 @@ class LinkedList:
         @type index: int
         @rtype: object
         """
-        curr = self._first
+        curr = self.first
         curr_index = 0
 
         # Iterate to (index)-th node
@@ -155,7 +155,7 @@ class LinkedList:
         >>> 4 in lst
         False
         """
-        current = self._first
+        current = self.first
         while current is not None:
             if current.item == item:
                 return True
@@ -181,7 +181,7 @@ class LinkedList:
         1
         """
         i = 0
-        current = self._first
+        current = self.first
         while current is not None:
             if current.item == item:
                 i += 1
@@ -206,7 +206,7 @@ class LinkedList:
         3
         """
         i = 0
-        current = self._first
+        current = self.first
         while current is not None:
             if current.item == item:
                 return i
@@ -216,6 +216,27 @@ class LinkedList:
 
         raise ValueError
 
+
+def reverse_linked_list(lst: LinkedList):
+    """
+    >>> lst = LinkedList([0, 1, 2, 3, 4])
+    >>> reverse_linked_list(lst)
+    >>> str(lst)
+    '[4 -> 3 -> 2 -> 1 -> 0]'
+    """
+    first_after = lst.first
+    while first_after.next is not None:
+        first_after = first_after.next
+    for i in range(len(lst) - 1):
+        prev = lst.first
+        last = lst.first
+        for j in range(len(lst) - i - 2):
+            prev = prev.next
+            last = last.next
+        last = last.next
+        prev.next = None
+        last.next = prev
+    lst.first = first_after
+
 if __name__ == '__main__':
-    import python_ta
-    python_ta.check_all()
+    pass

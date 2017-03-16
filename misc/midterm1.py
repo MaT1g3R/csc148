@@ -104,11 +104,11 @@ def filter_positive ( lst ):
     >>> lst = LinkedList ([3 , -10 , 4 , 0])
 
     >>> pos = filter_positive (lst) # [3 -> 4]
-    >>> pos._first.item
+    >>> pos.first.item
     3
-    >>> pos._first.next.item
+    >>> pos.first.next.item
     4
-    >>> pos._first.next.next is None
+    >>> pos.first.next.next is None
     True
     >>> lst[0]
     3

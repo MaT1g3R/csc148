@@ -29,7 +29,7 @@ class LinkedListRec:
         A list containing the other items after the first one.
 
     === Representation Invariants ===
-    _first is None if and only if _rest is None.
+    first is None if and only if _rest is None.
       This represents an empty list.
     """
     def __init__(self, items):
@@ -345,7 +345,7 @@ class LinkedListRec:
         'HELLO -> GOODBYE'
         >>> str(lst.map(len))
         '5 -> 7'
-        >>> lst._first
+        >>> lst.first
         'Hello'
         """
         if self._rest.is_empty():
