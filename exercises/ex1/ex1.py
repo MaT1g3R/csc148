@@ -238,15 +238,15 @@ if __name__ == '__main__':
     myManager.add_car("asdasd", 12)
 
 
-
-    import python_ta
-    python_ta.check_errors()
-
-    # testing
-
-
-    # testing ends
-
-    # Uncomment and run before final submission. This checks for style errors
-    # in addition to code inconsistencies and forbidden Python features.
-    python_ta.check_all()
+    #
+    # import python_ta
+    # python_ta.check_errors()
+    #
+    # # testing
+    #
+    #
+    # # testing ends
+    #
+    # # Uncomment and run before final submission. This checks for style errors
+    # # in addition to code inconsistencies and forbidden Python features.
+    # python_ta.check_all()
