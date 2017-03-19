@@ -231,28 +231,30 @@ def number_nodes(tree):
     >>> tree = HuffmanNode(None, left, right)
     >>> number_nodes(tree)
     >>> tree.left.number
-    0
-    >>> tree.right.number
-    1
-    >>> tree.number
     2
+    >>> tree.right.number
+    4
+    >>> tree.number
+    3
+    >>> tree.left.left.number
+    0
+    >>> tree.right.left.number
     """
+    __number_nodes(tree)
 
-    def recursive_move(tree, count=0):
-        if tree is None:
-            return 0
-        elif tree.left is None and tree.right is None:
-            return 0
-        else:
-            if tree.left:
-                count += recursive_move(tree.left, count)
-            if tree.right:
-                count += recursive_move(tree.right, count)
-            tree.number = count
-            count += 1
-            return count
 
-    recursive_move(tree, 0)
+def __number_nodes(tree: HuffmanNode, count=[0]):
+    if tree.right is None:
+        tree.number = count[0]
+        __number_nodes(tree.left)
+    elif tree.left is None:
+        tree.number = count[0]
+        __number_nodes(tree.right)
+    else:
+        count[0] += 1
+        tree.number = count[0]
+
+
 
 
 def avg_length(tree, freq_dict):
